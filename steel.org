@@ -1,0 +1,122 @@
+* Steel Sky Config
+
+** Heading
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;;; Steel sky config
+  ;;; This config is generated from steel.org please edit that fine instead.  
+#+END_SRC
+
+** Save files
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq make-backup-files nil) ; stop creating those backup~ files
+(setq auto-save-default nil) ; stop creating those #autosave# files
+
+(setq
+   backup-by-copying t      ; don't clobber symlinks
+   backup-directory-alist
+    '(("." . "~/.saves"))    ; don't litter my fs tree
+   delete-old-versions t
+   kept-new-versions 6
+   kept-old-versions 2
+   version-control t)       ; use versioned backups
+#+END_SRC
+
+** Put savefiles somewhere else, not polluting the directory
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq make-backup-files nil) ; stop creating those backup~ files
+(setq auto-save-default nil) ; stop creating those #autosave# files
+(setq
+   backup-by-copying t      ; don't clobber symlinks
+   backup-directory-alist
+    '(("." . "~/.saves"))    ; don't litter my fs tree
+   delete-old-versions t
+   kept-new-versions 6
+   kept-old-versions 2
+   version-control t)       ; use versioned backups
+#+END_SRC
+
+** Font config
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (if(file-directory-p "~/.fonts")
+     (message "Local font directory already exists.")
+    (make-directory "~/.fonts")
+     )
+
+  (if(file-exists-p "~/.fonts/envy.ttf")
+      (progn
+	(message "Font already installed!")
+	)
+    (progn
+      (copy-file (expand-file-name "ttf/envy.ttf" user-emacs-directory)  "~/.fonts/" nil)
+      (shell-command "fc-cache" t)
+      )
+    )
+
+
+
+
+ #+END_SRC
+
+** Install required packages 
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (require 'package)
+   ;; Adds the repositories
+  (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
+			   ("melpa" . "https://melpa.org/packages/")
+			   ("org" . "https://orgmode.org/elpa/")))
+
+  (defvar custom/packages '(use-package
+			    )
+    "A list of packages to ensure are installed at launch.")
+
+  (defun custom/packages-installed-p ()
+    (cl-loop for pkg in custom/packages
+	  when (not (package-installed-p pkg)) do (cl-return nil)
+	  finally (cl-return t)))
+
+  (unless (custom/packages-installed-p)
+    (when (not package-archive-contents)
+      (message "%s" "Refreshing package database...")
+      (package-refresh-contents)
+      (dolist (pkg custom/packages)
+	(when (not (package-installed-p pkg))
+      (package-install pkg)))))
+  (provide 'custom/packages)
+#+END_SRC
+
+** Install theming
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package ewal
+    :ensure t
+    :init (setq ewal-use-built-in-always-p nil
+		ewal-use-built-in-on-failure-p t
+		ewal-built-in-palette "sexy-material"))
+  (use-package ewal-spacemacs-themes
+    :ensure t
+    :init (progn
+	    (setq spacemacs-theme-underline-parens t
+		  my:rice:font (font-spec
+				:family "Envy Code R"
+				:weight 'semi-bold
+				:size 12.0))
+	    (show-paren-mode +1)
+	    (global-hl-line-mode)
+	    (set-frame-font my:rice:font nil t)
+	    (add-to-list  'default-frame-alist
+			  `(font . ,(font-xlfd-name my:rice:font))))
+    :config (progn
+	      (load-theme 'spacemacs-dark t)
+	      (enable-theme 'spacemacs-dark)))
+  (use-package ewal-evil-cursors
+    :ensure t
+    :after (ewal-spacemacs-themes)
+    :config (ewal-evil-cursors-get-colors
+	     :apply t :spaceline t))
+  (use-package spaceline
+    :ensure t
+    :after (ewal-evil-cursors winum)
+    :init (setq powerline-default-separator nil)
+    :config (spaceline-spacemacs-theme))
+#+END_SRC
+
+
