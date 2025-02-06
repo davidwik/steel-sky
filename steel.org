@@ -6,6 +6,7 @@
   ;;; This config is generated from steel.org please edit that fine instead.  
 #+END_SRC
 
+
 ** Save files
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq make-backup-files nil) ; stop creating those backup~ files
@@ -21,6 +22,7 @@
    version-control t)       ; use versioned backups
 #+END_SRC
 
+
 ** Put savefiles somewhere else, not polluting the directory
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq make-backup-files nil) ; stop creating those backup~ files
@@ -34,6 +36,7 @@
    kept-old-versions 2
    version-control t)       ; use versioned backups
 #+END_SRC
+
 
 ** Identation
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -80,6 +83,7 @@
 
 #+END_SRC
 
+
 ** Font config
 #+BEGIN_SRC emacs-lisp :tangle yes
   (if(file-directory-p "~/.fonts")
@@ -101,6 +105,7 @@
 
 
  #+END_SRC
+
 
 ** Install required packages 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -128,6 +133,7 @@
       (package-install pkg)))))
   (provide 'custom/packages)
 #+END_SRC
+
 
 ** Install theming
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -165,6 +171,19 @@
 #+END_SRC
 
 
+** Icons
+#+BEGIN_SRC emacs-lisp :tangle yes
+    (use-package all-the-icons
+      :ensure t
+      :init
+      (when (not (package-installed-p 'all-the-icons))
+      (all-the-icons-install-fonts))
+      )
+
+    
+#+END_SRC
+
+
 ** Hide buffers
 Get rid of *Messages* *Completions* while sometimes informative, mostly annoying.
 #+BEGIN_SRC emacs-lisp :tangle yes 
@@ -194,9 +213,9 @@ Get rid of *Messages* *Completions* while sometimes informative, mostly annoying
 Mmhmmm line number, we love them and hate them. Add the mode you 
 dislike them in in the *disable-modes-list*
 #+BEGIN_SRC emacs-lisp :tangle yes
-    (global-display-line-numbers-mode 1)
-    ;; Alternatively, to use it only in programming modes:
-    (add-hook 'prog-mode-hook #'display-line-numbers-mode)
+  (global-display-line-numbers-mode 1)
+  ;; Alternatively, to use it only in programming modes:
+  (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 #+END_SRC 
 
 
@@ -209,6 +228,68 @@ The menubar has to go! Bye!
 ;; No scrollbars!
 (scroll-bar-mode -1)
 
+#+END_SRC
 
+
+** Company MODE
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package company
+    :ensure t
+    :config
+    (progn
+      (add-hook 'after-init-hook 'global-company-mode)
+      )
+    )
+
+  (use-package auto-complete
+    :ensure t
+    )
 
 #+END_SRC
+
+
+
+** Helm
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (use-package helm-icons
+    :ensure t
+    :config
+    (setq helm-icons-provider 'all-the-icons)
+    )
+  
+  (helm-icons-enable)
+  (use-package helm
+    :ensure t 
+    :config
+    ;;(setq helm-split-window-inside-p t)
+    ;;(setq helm-use-frame-when-more-than-two-windows t)
+    (helm-autoresize-mode 1)
+    )
+
+  (use-package helm-mode
+    :config (helm-mode 1))
+
+  (use-package helm-command
+    :bind (("M-x" . helm-M-x)))
+
+  (use-package helm-files
+    :bind (("C-x C-f" . helm-find-files)))
+
+  (use-package helm-buffers
+    :bind (("C-x C-b" . helm-buffers-list)
+           ("M-s m" . helm-mini))
+    :config (setq helm-buffer-max-length nil))
+
+  (use-package helm-occur
+    :bind (("M-s o" . helm-occur)))
+
+  (use-package helm-imenu
+    :bind (("M-s i" . helm-imenu))
+    :config (setq imenu-max-item-length 120))
+
+  (use-package helm-bookmarks
+    :bind (("M-s b" . helm-bookmarks)))
+
+#+END_SRC
+
