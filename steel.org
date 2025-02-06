@@ -35,6 +35,51 @@
    version-control t)       ; use versioned backups
 #+END_SRC
 
+** Identation
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; Defining indentation
+(setq european-calendar-style 't)  ; European style calendar
+(setq calendar-week-start-day 1)
+(setq require-final-newline 't)
+
+
+(setq tab-width 2)
+(setq standard-indent 2)
+(setq c-basic-indent 2)
+(setq indent-tabs-mode nil)
+(setq-default indent-tabs-mode nil)
+(setq-default c-basic-offset 2)
+(setq-default tab-width 2)
+(setq-default sgml-indent-step 2)
+(setq-default sgml-basic-offset 2)
+(setq c-default-style "linux"
+      c-basic-offset 2)
+(setq js-indent-level 2)
+(setq css-indent-offset 2)
+(setq web-mode-code-indent-offset 2)
+(setq web-mode-markup-indent-offset 2)
+(setq js2-basic-offset 2)
+(setq web-mode-css-indent-offset 2)
+(setq nxml-child-indent 2)
+(setq nxml-attribute-indent 2)
+
+(setq web-mode-markup-indent-offset 2)
+(setq web-mode-css-indent-offset 2)
+(setq web-mode-code-indent-offset 2)
+(setq nxml-child-indent 2)
+(setq nxml-attribute-indent 2)
+(setq nxml-slash-auto-complete-flag t)
+(setq css-indent-offset 2)
+
+(add-hook 'json-mode-hook
+          (lambda()
+            (make-local-variable 'js-indent-level)
+            (setq js-indent-level 2)
+            )
+          )
+
+#+END_SRC
+
 ** Font config
 #+BEGIN_SRC emacs-lisp :tangle yes
   (if(file-directory-p "~/.fonts")
@@ -120,3 +165,50 @@
 #+END_SRC
 
 
+** Hide buffers
+Get rid of *Messages* *Completions* while sometimes informative, mostly annoying.
+#+BEGIN_SRC emacs-lisp :tangle yes 
+  ;; Removes *messages* from the buffer.
+  ;;(setq-default message-log-max nil)
+  ;;(kill-buffer "*Messages*")
+
+  ;; Removes *Completions* from buffer after you've opened a file.
+  (add-hook 'minibuffer-exit-hook
+	#'(lambda ()
+	   (let ((buffer "*Completions*"))
+	     (and (get-buffer buffer)
+		  (kill-buffer buffer)))))
+
+
+  ;; Disabled *Completions*
+  (add-hook 'minibuffer-exit-hook
+	    #'(lambda ()
+		(let ((buffer "*Completions*"))
+		  (and (get-buffer buffer)
+		       (kill-buffer buffer)))))
+  
+#+END_SRC
+
+
+** Line numbers
+Mmhmmm line number, we love them and hate them. Add the mode you 
+dislike them in in the *disable-modes-list*
+#+BEGIN_SRC emacs-lisp :tangle yes
+    (global-display-line-numbers-mode 1)
+    ;; Alternatively, to use it only in programming modes:
+    (add-hook 'prog-mode-hook #'display-line-numbers-mode)
+#+END_SRC 
+
+
+** Get rid off menu bar and Scrollbars
+The menubar has to go! Bye!
+#+BEGIN_SRC emacs-lisp :tangle yes
+(menu-bar-mode -99)
+(tool-bar-mode 0)
+
+;; No scrollbars!
+(scroll-bar-mode -1)
+
+
+
+#+END_SRC
