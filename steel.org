@@ -496,7 +496,8 @@ The menubar has to go! Bye!
     )
 #+END_SRC 
 
-** COMMENT Ignore me, just trying out themes
+** COMMENT Ignore me, just trying out themes. And notes
+https://sophiebos.io/posts/beautifying-emacs-org-mode/
 #+BEGIN_SRC emacs-lisp :tangle yes
 (load-theme 'base16-3024)
 (load-theme 'base16-apathy)
