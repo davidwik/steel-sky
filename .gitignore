@@ -5,3 +5,7 @@ init.el
 steel.el
 ac-comphist.dat
 tramp
+projectile-bookmarks.eld
+.cache/
+eshell/
+recentf

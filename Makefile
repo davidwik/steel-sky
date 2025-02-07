@@ -13,7 +13,15 @@ build:
 	@echo "$$INIT_BODY" > init.el
 	emacs --script init.el
 clean:
-	rm -rf steel.el eln-cache/ elpa/ ac-comphist.dat tramp auto-save-list init.el 
+	rm -rf steel.el    \
+               .cache      \
+               eln-cache/  \
+               elpa/       \
+               projectile-bookmarks.eld \
+               ac-comphist.dat \
+               tramp           \
+               auto-save-list  \
+               init.el 
 config:
 	emacs steel.org
 	build
