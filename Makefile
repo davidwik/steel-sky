@@ -16,6 +16,8 @@ clean:
 	rm -rf steel.el    \
                .cache      \
                eln-cache/  \
+               recentf     \
+               transient/  \
                elpa/       \
                projectile-bookmarks.eld \
                ac-comphist.dat \

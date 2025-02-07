@@ -9,3 +9,6 @@ projectile-bookmarks.eld
 .cache/
 eshell/
 recentf
+transient/
+recentf
+.mc-lists.el
