@@ -4,8 +4,6 @@
   ;;; Steel sky config
   ;;; This config is generated from steel.org please edit that fine instead.  
 #+END_SRC
-
-
 ** Save files
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq make-backup-files nil) ; stop creating those backup~ files
@@ -20,8 +18,6 @@
    kept-old-versions 2
    version-control t)       ; use versioned backups
 #+END_SRC
-
-
 ** Put savefiles somewhere else, not polluting the directory
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq make-backup-files nil) ; stop creating those backup~ files
@@ -36,7 +32,12 @@
    version-control t)       ; use versioned backups
 #+END_SRC
 
-
+** General functionality
+*** Save minibuffer history such as commands etc.
+#+BEGIN_SRC :tangle yes
+(savehist-mode t)
+(setq history-length 5)
+#+END_SRC
 ** Identation
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; Defining indentation
@@ -80,7 +81,6 @@
 
 #+END_SRC
 
-
 ** Font config
 #+BEGIN_SRC emacs-lisp :tangle yes
   (if(file-directory-p "~/.fonts")
@@ -99,7 +99,6 @@
     )
 
  #+END_SRC
-
 
 ** Install required packages 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -132,7 +131,6 @@
   ;;(package-upgrade 'seq)
   #+END_SRC
   
-
 ** Install theming
 #+BEGIN_SRC emacs-lisp :tangle yes
 
@@ -176,7 +174,6 @@
     :config (spaceline-spacemacs-theme))
 #+END_SRC
 
-
 ** Multicursors
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package multiple-cursors
@@ -203,7 +200,6 @@ multiple-cursors
     )
 #+END_SRC
 
-
 ** Hide buffers
 Get rid of *Messages* *Completions* while sometimes informative, mostly annoying.
 #+BEGIN_SRC emacs-lisp :tangle yes 
@@ -229,7 +225,6 @@ Get rid of *Messages* *Completions* while sometimes informative, mostly annoying
 
   #+END_SRC
 
-
 ** Line numbers
 Mmhmmm line number, we love them and hate them. Add the mode you 
 dislike them in in the *disable-modes-list*
@@ -237,7 +232,6 @@ dislike them in in the *disable-modes-list*
   ;; Alternatively, to use it only in programming modes:
   (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 #+END_SRC 
-
 
 ** Get rid off menu bar and Scrollbars
 The menubar has to go! Bye!
@@ -250,19 +244,37 @@ The menubar has to go! Bye!
 
 #+END_SRC
 
-
 ** Org Mode
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package org
-    :pin gnu
-    :mode (("\\.org$" . org-mode))
+       :pin gnu
+       :mode (("\\.org$" . org-mode))
+       :config
+     (progn
+       (add-hook 'org-mode-hook #'org-modern-mode)
+       (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
+
+     ))
+  (use-package org-modern
+    :ensure t
     :config
-  (progn
-  ;;config-stuff
-  ))
+    (progn
+      (setq
+       org-auto-align-tags nil
+       org-tags-column 0
+       org-catch-invisible-edits 'show-and-error
+       org-special-ctrl-a/e t
+       org-insert-heading-respect-content t
+       org-hide-emphasis-markers t
+       org-pretty-entities t
+       org-agenda-tags-column 0
+       org-ellipsis "…"
+       )
+      )
+    )
+
 
 #+END_SRC
-
 
 ** Markdown mode
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -274,7 +286,6 @@ The menubar has to go! Bye!
     :ensure t
     )
 #+END_SRC
-
 
 ** Company MODE
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -291,7 +302,6 @@ The menubar has to go! Bye!
     )
 
 #+END_SRC
-
 
 ** Treemacs
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -413,7 +423,6 @@ The menubar has to go! Bye!
 
 #+END_SRC
 
-
 ** COMMENT Projectile
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package projectile
@@ -424,7 +433,6 @@ The menubar has to go! Bye!
                 ("C-c p" . projectile-command-map))
     )
 #+END_SRC
-
 
 ** Helm
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -470,7 +478,6 @@ The menubar has to go! Bye!
 
 #+END_SRC
 
-
 ** Dashboard
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package dashboard
@@ -491,7 +498,6 @@ The menubar has to go! Bye!
 
 ** COMMENT Ignore me, just trying out themes
 #+BEGIN_SRC emacs-lisp :tangle yes
-
 (load-theme 'base16-3024)
 (load-theme 'base16-apathy)
 (load-theme 'base16-apprentice)
@@ -788,3 +794,4 @@ The menubar has to go! Bye!
 (load-theme 'whiteboard)
 (load-theme 'wombat)
 #+END_SRC
+
