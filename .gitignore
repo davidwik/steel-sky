@@ -13,3 +13,6 @@ transient/
 recentf
 .mc-lists.el
 history
+snippets/*
+snippets/!_files_goes_here_
+session.*

@@ -497,7 +497,7 @@ The menubar has to go! Bye!
 #+END_SRC 
 
 ** COMMENT Ignore me, just trying out themes. And notes
-https://sophiebos.io/posts/beautifying-emacs-org-mode/
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 (load-theme 'base16-3024)
 (load-theme 'base16-apathy)
@@ -795,4 +795,33 @@ https://sophiebos.io/posts/beautifying-emacs-org-mode/
 (load-theme 'whiteboard)
 (load-theme 'wombat)
 #+END_SRC
+** YaSnippets
+Create a new snippet with M-x yas/new-snippet
+ex.
+#+BEGIN_SRC
+# -*- mode: snippet -*-
+# name: Python generate class
+# key: <<pc
+# --
 
+# ${1:var_name} works like a form
+
+class ${1:class_name}(object):
+
+$0 # Cursor goes here
+#+END_SRC
+
+Include the yasnippet in our config:
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package yasnippet
+  :ensure t
+  :config
+  (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
+  (yas-global-mode 1))
+#+END_SRC
+** Languages
+*** Python
+
+
+** Notes
+https://sophiebos.io/posts/beautifying-emacs-org-mode/
