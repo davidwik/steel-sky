@@ -83,18 +83,18 @@
 
 ** Font config
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (if(file-directory-p "~/.fonts")
+  (if(file-directory-p "~/.local/share/fonts")
      (message "Local font directory already exists.")
-    (make-directory "~/.fonts")
+    (make-directory "~/.local/share/fonts")
      )
 
-  (if(file-exists-p "~/.fonts/envy.ttf")
+  (if(file-exists-p "~/.local/share/fonts/envy.ttf")
       (progn
 	(message "Font already installed!")
 	)
     (progn
-      (copy-file (expand-file-name "ttf/envy.ttf" user-emacs-directory)  "~/.fonts/" nil)
-      (shell-command "fc-cache" t)
+      (copy-file (expand-file-name "ttf/envy.ttf" user-emacs-directory)  "~/.local/share/fonts/" nil)
+      (shell-command "fc-cache -f -v" t)
       )
     )
 
@@ -188,17 +188,20 @@
     )
 #+END_SRC
 
-#+END_SRC
-
-multiple-cursors
 
 ** Icons
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package all-the-icons
     :ensure t
-    
+    :config
+    (when (and (not (file-exists-p "~/.emacs.d/.install-flags/all-the-icon-fonts-installed.flag"))
+               (package-installed-p 'all-the-icons))
+      (message "Running post-install setup for some-package...")
+      (all-the-icons-install-fonts t)
+      (write-region "Installed\n" nil "~/.emacs.d/.install-flags/all-the-icon-fonts-installed.flag"))
     )
-#+END_SRC
+
+    #+END_SRC
 
 ** Hide buffers
 Get rid of *Messages* *Completions* while sometimes informative, mostly annoying.
@@ -821,7 +824,17 @@ Include the yasnippet in our config:
 #+END_SRC
 ** Languages
 *** Python
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package python
+  :ensure nil
+  )
+#+END_SRC
+
 
 
 ** Notes
+Lookin into org-mode styling:
 https://sophiebos.io/posts/beautifying-emacs-org-mode/
+
+Look in to python mode setup:
+https://webbureaucrat.dev/articles/emacs-for-python-and-poetry-using-basedpyright-langserver/

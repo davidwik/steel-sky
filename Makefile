@@ -11,19 +11,25 @@ build:
 	rm -f steel.el
 	rm -f init.el
 	@echo "$$INIT_BODY" > init.el
+	mkdir .install-flags/
 	emacs --script init.el
+
 clean:
 	rm -rf steel.el    \
                .cache      \
                eln-cache/  \
                recentf     \
+               .install-flags \
                transient/  \
+               eshell      \
                elpa/       \
                projectile-bookmarks.eld \
                ac-comphist.dat \
+               session.*       \
                tramp           \
                auto-save-list  \
-               init.el 
+               history         \
+               init.el
 config:
 	emacs steel.org
 	build
