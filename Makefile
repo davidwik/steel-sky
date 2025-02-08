@@ -27,7 +27,7 @@ clean:
                ac-comphist.dat \
                session.*       \
                tramp           \
-               auto-save-list  \
+               auto-save-list/ \
                history         \
                init.el
 config:
