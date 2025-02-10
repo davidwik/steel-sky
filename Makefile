@@ -6,27 +6,32 @@ define INIT_BODY
 endef
 export INIT_BODY
 
-
 build:
 	rm -f steel.el
 	rm -f init.el
 	@echo "$$INIT_BODY" > init.el
-	mkdir .install-flags/
+	mkdir -p .install-flags/
 	emacs --script init.el
 
+
+get-deps:
+	pipx install basedpyright
+	pipx install ruff
 clean:
-	rm -rf steel.el    \
-               .cache      \
-               eln-cache/  \
-               recentf     \
-               .install-flags \
-               transient/  \
-               eshell      \
-               elpa/       \
+	rm -rf steel.el              \
+               .cache/         \
+               eln-cache/      \
+               url             \
+               recentf         \
+               .install-flags  \
+               transient/      \
+               eshell          \
+               elpa/           \
                projectile-bookmarks.eld \
                ac-comphist.dat \
                session.*       \
                tramp           \
+               .lsp-session-v1 \
                auto-save-list/ \
                history         \
                init.el
