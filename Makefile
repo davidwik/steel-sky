@@ -26,6 +26,7 @@ clean:
                recentf         \
                .install-flags  \
                transient/      \
+               .chatgpt-shell.el \
                eshell          \
                elpa/           \
                projectile-bookmarks.eld \

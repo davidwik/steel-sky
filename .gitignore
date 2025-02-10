@@ -20,3 +20,4 @@ session.*
 .install-flags/
 .lsp-session-v1
 url/
+.chatgpt-shell.el

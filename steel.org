@@ -900,13 +900,11 @@ Include the yasnippet in our config:
 #+END_SRC
 
 ** Extras
-*** COMMENT CHAT GPT shell
+*** CHAT GPT shell
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package chatgpt-shell
     :ensure t
-    :config
-    (setq chatgpt-shell-openai-key (getenv "OPEN_AI_KEY"))
-    )
+    )  
 #+END_SRC
 
 ** Notes
