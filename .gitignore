@@ -13,9 +13,10 @@ transient/
 recentf
 .mc-lists.el
 history
+games/
 snippets/*
 snippets/!_files_goes_here_
 session.*
 .install-flags/
-.mc-lists.el
-games/
+.lsp-session-v1
+url/
