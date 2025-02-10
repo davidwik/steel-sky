@@ -15,7 +15,6 @@ recentf
 history
 snippets/*
 snippets/!_files_goes_here_
-
 session.*
 .install-flags/
 .lsp-session-v1
