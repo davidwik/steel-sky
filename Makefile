@@ -19,10 +19,12 @@ get-deps:
 	pipx install basedpyright
 	pipx install ruff
 clean:
-	rm -rf steel.el              \
+	rm -rf steel.el        \
                .cache/         \
                eln-cache/      \
                url             \
+               chatgpt/        \
+               games/          \
                recentf         \
                .install-flags  \
                transient/      \

@@ -21,3 +21,4 @@ session.*
 .lsp-session-v1
 url/
 .chatgpt-shell.el
+projects

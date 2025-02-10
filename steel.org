@@ -2,7 +2,7 @@
 ** Heading
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;;; Steel sky config
-  ;;; This config is generated from steel.org please edit that fine instead.  
+  ;;; This config is generated from steel.org please edit that fine instead.
 #+END_SRC
 ** Save files
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -100,7 +100,7 @@
 
  #+END_SRC
 
-** Install required packages 
+** Install required packages
 #+BEGIN_SRC emacs-lisp :tangle yes
   (require 'package)
   ;; register a upgrade package handler
@@ -130,48 +130,55 @@
   ;;(setq package-install-upgrade-built-in t)
   ;;(package-upgrade 'seq)
   #+END_SRC
-  
+
 ** Install theming
 #+BEGIN_SRC emacs-lisp :tangle yes
 
-  (use-package base16-theme
-    :ensure t
-    )
+      (use-package base16-theme
+        :ensure t
+        )
 
-  (use-package birds-of-paradise-plus-theme
-    :ensure t
-    )
-  (use-package ewal
-    :ensure t
-    :init (setq ewal-use-built-in-always-p nil
-                ewal-use-built-in-on-failure-p t
-                ewal-built-in-palette "sexy-material"))
-  (use-package ewal-spacemacs-themes
-    :ensure t
-    :init (progn
-            (setq spacemacs-theme-underline-parens t
-                  my:rice:font (font-spec
-                                :family "Envy Code R"
-                                :weight 'semi-bold
-                                :size 12.0))
-            (show-paren-mode +1)
-            (global-hl-line-mode)
-            (set-frame-font my:rice:font nil t)
-            (add-to-list  'default-frame-alist
-                          `(font . ,(font-xlfd-name my:rice:font))))
-    :config (progn
-              (load-theme 'base16-mocha t)
-              (enable-theme 'base16-mocha )))
+      (use-package birds-of-paradise-plus-theme
+        :ensure t
+        )
+      (use-package ewal
+        :ensure t
+        :init (setq ewal-use-built-in-always-p nil
+                    ewal-use-built-in-on-failure-p t
+                    ewal-built-in-palette "sexy-material"))
+      (use-package ewal-spacemacs-themes
+        :ensure t
+        :init (progn
+                (setq spacemacs-theme-underline-parens t
+                      my:rice:font (font-spec
+                                    :family "Envy Code R"
+                                    :weight 'semi-bold
+                                    :size 12.0))
+                (show-paren-mode +1)
+                (global-hl-line-mode)
+                (set-frame-font my:rice:font nil t)
+                (add-to-list  'default-frame-alist
+                              `(font . ,(font-xlfd-name my:rice:font))))
+        :config (progn
+                  (load-theme 'base16-mocha t)
+                  (enable-theme 'base16-mocha )))
   (use-package ewal-evil-cursors
     :ensure t
     :after (ewal-spacemacs-themes)
     :config (ewal-evil-cursors-get-colors
-    :apply t :spaceline t))
-  (use-package spaceline
-    :ensure t
-    :after (ewal-evil-cursors winum)
-    :init (setq powerline-default-separator nil)
-    :config (spaceline-spacemacs-theme))
+             :apply t :spaceline t))
+;  (use-package spaceline
+;    :ensure t
+;    :after (ewal-evil-cursors winum)
+;    :init (setq powerline-default-separator nil)
+;    :config (spaceline-spacemacs-theme))
+
+  (use-package spaceline-all-the-icons
+      :ensure t
+;      :after spaceline
+      :config
+      (spaceline-all-the-icons-theme)
+      )
 #+END_SRC
 
 ** Multicursors
@@ -204,7 +211,7 @@
 
 ** Hide buffers
 Get rid of *Messages* *Completions* while sometimes informative, mostly annoying.
-#+BEGIN_SRC emacs-lisp :tangle yes 
+#+BEGIN_SRC emacs-lisp :tangle yes
   ;; Removes *messages* from the buffer.
   ;;(setq-default message-log-max nil)
   ;;(kill-buffer "*Messages*")
@@ -228,12 +235,12 @@ Get rid of *Messages* *Completions* while sometimes informative, mostly annoying
   #+END_SRC
 
 ** Line numbers
-Mmhmmm line number, we love them and hate them. Add the mode you 
+Mmhmmm line number, we love them and hate them. Add the mode you
 dislike them in in the *disable-modes-list*
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; Alternatively, to use it only in programming modes:
   (add-hook 'prog-mode-hook #'display-line-numbers-mode)
-#+END_SRC 
+#+END_SRC
 
 ** Get rid off menu bar and Scrollbars
 The menubar has to go! Bye!
@@ -327,7 +334,7 @@ The menubar has to go! Bye!
     )
 
     (use-package lsp-ui
-    :ensure t 
+    :ensure t
     )
 
     (use-package lsp-pyright
@@ -339,7 +346,7 @@ The menubar has to go! Bye!
   ;;    )
 
 #+END_SRC
-   
+
 ** Eglot and Ruff
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;;  (add-hook 'python-mode-hook 'eglot-ensure)
@@ -480,17 +487,6 @@ The menubar has to go! Bye!
 
 #+END_SRC
 
-** COMMENT Projectile
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package projectile
-    :ensure t
-    :init
-    (projectile-mode +1)
-    :bind (:map projectile-mode-map
-                ("C-c p" . projectile-command-map))
-    )
-#+END_SRC
-
 ** Helm
 #+BEGIN_SRC emacs-lisp :tangle yes
 
@@ -499,10 +495,10 @@ The menubar has to go! Bye!
     :config
     (setq helm-icons-provider 'all-the-icons)
     )
-  
+
   (helm-icons-enable)
   (use-package helm
-    :ensure t 
+    :ensure t
     :config
     (setq helm-split-window-inside-p t)
     (setq helm-use-frame-when-more-than-two-windows t)
@@ -538,7 +534,7 @@ The menubar has to go! Bye!
 ** Dashboard
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package dashboard
-    :ensure t 
+    :ensure t
     :init (progn
             (dashboard-setup-startup-hook)
             (setq dashboard-banner-logo-title "Steel sky 0.2.7")
@@ -551,7 +547,76 @@ The menubar has to go! Bye!
               )
             )
     )
-#+END_SRC 
+#+END_SRC
+
+** YaSnippets
+Create a new snippet with M-x yas/new-snippet
+ex.
+#+BEGIN_SRC
+# -*- mode: snippet -*-
+# name: Python generate class
+# key: <<pc
+# --
+
+# ${1:var_name} works like a form
+
+class ${1:class_name}(object):
+
+$0 # Cursor goes here
+#+END_SRC
+
+Include the yasnippet in our config:
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package yasnippet
+  :ensure t
+  :config
+  (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
+  (yas-global-mode 1))
+#+END_SRC
+** Languages
+*** Python
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package python
+    :hook
+    (python-mode . lsp-mode)
+    )
+#+END_SRC
+*** RUST
+Rudimentary Rust support
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package rust-mode
+    :ensure t
+    :config
+    (setq rust-format-on-save t)
+    :hook
+    (rust-mode . prettify-symbols-mode)
+    )
+#+END_SRC
+
+*** Web Mode
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package web-mode
+    :ensure t
+  )
+#+END_SRC
+
+** Extras
+*** COMMENT CHAT GPT shell
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package chatgpt-shell
+    :ensure t
+    )
+#+END_SRC
+** COMMENT Projectile
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package projectile
+    :ensure t
+    :init
+    (projectile-mode +1)
+    :bind (:map projectile-mode-map
+                ("C-c p" . projectile-command-map))
+    )
+#+END_SRC
 
 ** COMMENT Ignore me, just trying out themes. And notes
 
@@ -852,61 +917,6 @@ The menubar has to go! Bye!
 (load-theme 'whiteboard)
 (load-theme 'wombat)
 #+END_SRC
-** YaSnippets
-Create a new snippet with M-x yas/new-snippet
-ex.
-#+BEGIN_SRC
-# -*- mode: snippet -*-
-# name: Python generate class
-# key: <<pc
-# --
-
-# ${1:var_name} works like a form
-
-class ${1:class_name}(object):
-
-$0 # Cursor goes here
-#+END_SRC
-
-Include the yasnippet in our config:
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package yasnippet
-  :ensure t
-  :config
-  (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
-  (yas-global-mode 1))
-#+END_SRC
-** Languages
-*** COMMENT Python bak
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package python
-    :config (progn
-              (setq python-flymake-command '("ruff" "--quiet" "--stdin-filename=stdin" "-")
-                    )
-              )
-    :hook
-    (python-mode . lsp-mode)
-    (python-mode . flymake-mode)
-    (python-mode . ruff-format-on-save-mode)
-
-  )
-#+END_SRC
-*** Python
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package python
-    :ensure nil
-    :hook (python-mode . lsp-mode)
-    )
-#+END_SRC
-
-** Extras
-*** CHAT GPT shell
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package chatgpt-shell
-    :ensure t
-    )  
-#+END_SRC
-
 ** Notes
 Lookin into org-mode styling:
 https://sophiebos.io/posts/beautifying-emacs-org-mode/
