@@ -167,18 +167,18 @@
     :after (ewal-spacemacs-themes)
     :config (ewal-evil-cursors-get-colors
              :apply t :spaceline t))
-;  (use-package spaceline
-;    :ensure t
-;    :after (ewal-evil-cursors winum)
-;    :init (setq powerline-default-separator nil)
-;    :config (spaceline-spacemacs-theme))
+  (use-package spaceline
+    :ensure t
+    :after (ewal-evil-cursors winum)
+    :init (setq powerline-default-separator nil)
+    :config (spaceline-spacemacs-theme))
 
-  (use-package spaceline-all-the-icons
-      :ensure t
+;;  (use-package spaceline-all-the-icons
+;;      :ensure t
 ;      :after spaceline
-      :config
-      (spaceline-all-the-icons-theme)
-      )
+;;      :config
+;;      (spaceline-all-the-icons-theme)
+;;      )
 #+END_SRC
 
 ** Multicursors
@@ -303,7 +303,7 @@ The menubar has to go! Bye!
     :config
     (global-company-mode t)
     (setq company-idle-delay 0.1)
-    (setq company-minimum-prefix-length 2)
+    (setq company-minimum-prefix-length 1)
     (setq company-tooltip-offset-display 'lines)
     (setq company-tooltip-flip-when-above t)
     (define-key company-active-map (kbd "\C-n") 'company-select-next)
@@ -311,62 +311,39 @@ The menubar has to go! Bye!
     (define-key company-active-map (kbd "\C-d") 'company-show-doc-buffer)
     (define-key company-active-map (kbd "M-.") 'company-show-location)
     )
-
-
-  ;;  (use-package auto-complete
-  ;;  :ensure t
-  ;;    )
-
 #+END_SRC
 ** LSP mode and ruff
 #+BEGIN_SRC emacs-lisp :tangle yes
-    (use-package lsp-mode
-      :ensure t
-      :config
-        (setq lsp-pyright-langserver-command "basedpyright"
-              lsp-ui-doc-show-with-mouse t
-              lsp-ui-doc-position 'at-point
-              lsp-pylsp-plugins-ruff-enabled t
-              lsp-pylsp-plugins-mypy-enabled t
-              lsp-pylsp-plugins-rope-autoimport-enabled t
-              )
+  (use-package lsp-mode
+    :ensure t
+    :config
+    (setq lsp-pyright-langserver-command "basedpyright"
+          lsp-ui-doc-show-with-mouse t
+          lsp-ui-doc-position 'at-point
+          lsp-pylsp-plugins-ruff-enabled t
+          lsp-pylsp-plugins-mypy-enabled t
+          lsp-pylsp-plugins-rope-autoimport-enabled t
+          )
 
     )
 
-    (use-package lsp-ui
+  (use-package lsp-ui
     :ensure t
     )
 
-    (use-package lsp-pyright
-      :ensure t
+  (use-package lsp-pyright
+    :ensure t
     )
-
-  ;;  (use-package ruff-format
-  ;;   :ensure t
-  ;;    )
-
-#+END_SRC
-
-** Eglot and Ruff
-#+BEGIN_SRC emacs-lisp :tangle yes
-;;  (add-hook 'python-mode-hook 'eglot-ensure)
-;;  (with-eval-after-load 'eglot
-;;    (add-to-list 'eglot-server-programs
-;;                 '(python-mode . ("ruff" "server")))
-;;    (add-hook 'after-save-hook 'eglot-format))
 
   (use-package ruff-format
     :ensure t
-    :hook (python-mode . ruff-format-on-save-mode)
-   )
+    )
 
   (use-package flymake-ruff
-;;    :ensure t
     :hook (python-mode . flymake-ruff-load)
-;;    (eglot-managed-mode . flymake-ruff-load)
     )
-#+END_SRC
 
+#+END_SRC
 ** Treemacs
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package treemacs
@@ -579,6 +556,7 @@ Include the yasnippet in our config:
   (use-package python
     :hook
     (python-mode . lsp-mode)
+    (python-mode . ruff-format-on-save-mode)
     )
 #+END_SRC
 *** RUST
@@ -601,7 +579,7 @@ Rudimentary Rust support
 #+END_SRC
 
 ** Extras
-*** COMMENT CHAT GPT shell
+*** CHAT GPT shell
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package chatgpt-shell
     :ensure t
