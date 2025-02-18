@@ -78,7 +78,6 @@
               (setq js-indent-level 2)
               )
             )
-
 #+END_SRC
 
 ** Font config
@@ -250,14 +249,13 @@ dislike them in in the *disable-modes-list*
   (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 #+END_SRC
 
-** Get rid off menu bar and Scrollbars
+** Get rid off menu bar and Scrollbars and set
 The menubar has to go! Bye!
 #+BEGIN_SRC emacs-lisp :tangle yes
-(menu-bar-mode -99)
-(tool-bar-mode 0)
-
-;; No scrollbars!
-(scroll-bar-mode -1)
+  (menu-bar-mode -99)
+  (tool-bar-mode 0)
+  ;; No scrollbars!
+  (scroll-bar-mode -1)
 
 #+END_SRC
 
@@ -310,8 +308,8 @@ The menubar has to go! Bye!
     :ensure t
     :config
     (global-company-mode t)
-    (setq company-idle-delay 0.1)
-    (setq company-minimum-prefix-length 1)
+    (setq company-idle-delay 0.5)
+    (setq company-minimum-prefix-length 0)
     (setq company-tooltip-offset-display 'lines)
     (setq company-tooltip-flip-when-above t)
     (define-key company-active-map (kbd "\C-n") 'company-select-next)
@@ -322,34 +320,35 @@ The menubar has to go! Bye!
 #+END_SRC
 ** LSP mode and ruff
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package lsp-mode
-    :ensure t
-    :config
-    (setq lsp-pyright-langserver-command "basedpyright"
-          lsp-ui-doc-show-with-mouse t
-          lsp-ui-doc-position 'at-point
-          lsp-pylsp-plugins-ruff-enabled t
-          lsp-pylsp-plugins-mypy-enabled t
-          lsp-pylsp-plugins-rope-autoimport-enabled t
+        (use-package lsp-mode
+          :ensure t
+          :config
+          (setq lsp-pyright-langserver-command "basedpyright"
+                lsp-ui-doc-show-with-mouse t
+                lsp-ui-doc-position 'at-point
+                lsp-pylsp-plugins-ruff-enabled t
+                lsp-pylsp-plugins-mypy-enabled t
+                lsp-pylsp-plugins-rope-autoimport-enabled t
+                )
+
           )
 
-    )
+        (use-package lsp-ui
+          :ensure t
+          )
 
-  (use-package lsp-ui
-    :ensure t
-    )
+        (use-package lsp-pyright
+          :ensure t
+          )
 
-  (use-package lsp-pyright
-    :ensure t
-    )
+        (use-package ruff-format
+          :ensure t
+          )
 
-  (use-package ruff-format
-    :ensure t
-    )
-
-  (use-package flymake-ruff
-    :hook (python-mode . flymake-ruff-load)
-    )
+        (use-package flymake-ruff
+          :ensure t
+          :hook (python-mode . flymake-ruff-load)
+          )
 
 #+END_SRC
 ** Treemacs
@@ -565,7 +564,16 @@ Include the yasnippet in our config:
     :hook
     (python-mode . lsp-mode)
     (python-mode . ruff-format-on-save-mode)
+    (python-mode . display-fill-column-indicator-mode)
     )
+
+  ;; Put the column indicator at line 79
+  (add-hook 'python-mode-hook
+            (lambda ()
+              (set-fill-column 79)
+                )
+            )
+
 #+END_SRC
 *** RUST
 Rudimentary Rust support
@@ -599,8 +607,7 @@ Rudimentary Rust support
     :ensure t
     :init
     (projectile-mode +1)
-    :bind (:map projectile-mode-map
-                ("C-c p" . projectile-command-map))
+    :bind-keymap ("C-c p" . projectile-command-map)
     )
 #+END_SRC
 
