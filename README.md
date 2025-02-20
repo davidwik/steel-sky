@@ -2,8 +2,10 @@
 ![Steel Sky logotype](https://github.com/davidwik/steel-sky/blob/master/img/logo-medium.png?raw=true)
 
 ## Requirements
-A Linux computer and Emacs >= 29
-Python and pipx (to install support for python related features)
+- A somewhat working computer running some kind of linux.
+- BASH (or ZSH) 💪
+- Emacs >= 29 🧙🏿‍♂️ 🎠
+- Python and pipx 🐍
 
 ## Setup 
 ```bash
