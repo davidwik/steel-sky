@@ -131,53 +131,71 @@
   #+END_SRC
 
 ** Install theming
+Will install a vast range of different themes.
 #+BEGIN_SRC emacs-lisp :tangle yes
 
-      (use-package base16-theme
-        :ensure t
-        )
+  ;; Cool themes,
+  ;; spacemacs-dark
+  ;; base16-mocha
+  ;; doom-laserwave
+  ;; doom-city-lights
+  ;; base16-gruvbox-material-dark-hard
+  ;; base16-catppuccin-mocha
+  (setq chtheme 'spacemacs-dark)
 
-      (use-package birds-of-paradise-plus-theme
-        :ensure t
-        )
-      (use-package ewal
-        :ensure t
-        :init (setq ewal-use-built-in-always-p nil
-                    ewal-use-built-in-on-failure-p t
-                    ewal-built-in-palette "sexy-material"))
-      (use-package ewal-spacemacs-themes
-        :ensure t
-        :init (progn
-                (setq spacemacs-theme-underline-parens t
-                      my:rice:font (font-spec
-                                    :family "Envy Code R"
-                                    :weight 'semi-bold
-                                    :size 12.0))
-                (show-paren-mode +1)
-                (global-hl-line-mode)
-                (set-frame-font my:rice:font nil t)
-                (add-to-list  'default-frame-alist
-                              `(font . ,(font-xlfd-name my:rice:font))))
-        :config (progn
-                  (load-theme 'base16-mocha t)
-                  (enable-theme 'base16-mocha )))
+  (use-package base16-theme
+    :ensure t
+    )
+  (use-package doom-themes
+    :ensure t
+    )
+  (use-package birds-of-paradise-plus-theme
+    :ensure t
+    )
+
+  
+  (use-package ewal
+    :ensure t
+    :init (setq ewal-use-built-in-always-p nil
+                ewal-use-built-in-on-failure-p t
+                ewal-built-in-palette "sexy-material"))
+
+  (use-package ewal-spacemacs-themes
+    :ensure t
+    :init (progn
+            (setq spacemacs-theme-underline-parens t
+                  my:rice:font (font-spec
+                                :family "Envy Code R"
+                                :weight 'semi-bold
+                                :size 12.0))
+            (show-paren-mode +1)
+            (global-hl-line-mode)
+            (set-frame-font my:rice:font nil t)
+            (add-to-list  'default-frame-alist
+                          `(font . ,(font-xlfd-name my:rice:font))))
+    :config (progn
+              (load-theme chtheme t)
+              (enable-theme chtheme )))
+
+
   (use-package ewal-evil-cursors
     :ensure t
     :after (ewal-spacemacs-themes)
     :config (ewal-evil-cursors-get-colors
              :apply t :spaceline t))
+
   (use-package spaceline
     :ensure t
     :after (ewal-evil-cursors winum)
     :init (setq powerline-default-separator nil)
     :config (spaceline-spacemacs-theme))
 
-;;  (use-package spaceline-all-the-icons
-;;      :ensure t
-;      :after spaceline
-;;      :config
-;;      (spaceline-all-the-icons-theme)
-;;      )
+  ;;  (use-package spaceline-all-the-icons
+  ;;      :ensure t
+                                          ;      :after spaceline
+  ;;      :config
+  ;;      (spaceline-all-the-icons-theme)
+  ;;      )
 #+END_SRC
 
 ** Multicursors
@@ -302,7 +320,7 @@ The menubar has to go! Bye!
     )
 #+END_SRC
 
-** Company MODE
+** Company mode
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package company
     :ensure t
