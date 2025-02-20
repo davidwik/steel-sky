@@ -2,23 +2,11 @@
 ** Heading
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;;; Steel sky config
-  ;;; This config is generated from steel.org please edit that fine instead.
+  ;;; If this file has an .el ending it is generated from steel.org
+  ;;; please edit that file instead.  Otherwise you are in the
+  ;;; right place =) 
 #+END_SRC
-** Save files
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq make-backup-files nil) ; stop creating those backup~ files
-(setq auto-save-default nil) ; stop creating those #autosave# files
-
-(setq
-   backup-by-copying t      ; don't clobber symlinks
-   backup-directory-alist
-    '(("." . "~/.saves"))    ; don't litter my fs tree
-   delete-old-versions t
-   kept-new-versions 6
-   kept-old-versions 2
-   version-control t)       ; use versioned backups
-#+END_SRC
-** Put savefiles somewhere else, not polluting the directory
+** Put temp-savefiles somewhere else, not polluting the working directory
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq make-backup-files nil) ; stop creating those backup~ files
 (setq auto-save-default nil) ; stop creating those #autosave# files
