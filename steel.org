@@ -326,36 +326,56 @@ The menubar has to go! Bye!
 #+END_SRC
 ** LSP mode and ruff
 #+BEGIN_SRC emacs-lisp :tangle yes
-        (use-package lsp-mode
-          :ensure t
-          :config
-          (setq lsp-pyright-langserver-command "basedpyright"
-                lsp-ui-doc-show-with-mouse t
-                lsp-ui-doc-position 'at-point
-                lsp-pylsp-plugins-ruff-enabled t
-                lsp-pylsp-plugins-mypy-enabled t
-                lsp-pylsp-plugins-rope-autoimport-enabled t
-                )
-
+  (use-package lsp-mode
+    :ensure t
+    :init (add-to-list 'company-backends 'company-capf)
+    :config
+    (setq lsp-pyright-langserver-command "basedpyright"
+          lsp-ui-doc-show-with-mouse t
+          lsp-ui-doc-position 'at-point
+          lsp-pylsp-plugins-ruff-enabled t
+          lsp-pylsp-plugins-mypy-enabled t
+          lsp-pylsp-plugins-rope-autoimport-enabled t
           )
+    )
 
-        (use-package lsp-ui
-          :ensure t
-          )
+  (use-package lsp-ui
+    :ensure t
+    )
 
-        (use-package lsp-pyright
-          :ensure t
-          )
+  (use-package lsp-pyright
+    :ensure t
+    )
 
-        (use-package ruff-format
-          :ensure t
-          )
+  (use-package ruff-format
+    :ensure t
+    )
 
-        (use-package flymake-ruff
-          :ensure t
-          :hook (python-mode . flymake-ruff-load)
-          )
+  (use-package flymake-ruff
+    :ensure t
+    :hook (python-mode . flymake-ruff-load)
+    )
 
+#+END_SRC
+** COMMENT Eglot
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package eglot
+    :ensure t
+    :defer t
+    :hook (
+           (python-mode . eglot-ensure)
+           (rust-mode . eglot-ensure))
+    :config
+    (add-to-list 'eglot-server-programs
+                 `(python-mode
+                   . ,(eglot-alternatives '(
+                                            ("basedpyright-langserver" "--stdio")                                    
+                                            ))))
+    )
+  (use-package flymake-ruff
+    :ensure t
+    :hook(eglot-managed-mode . flymake-ruff-load)     
+    )
 #+END_SRC
 ** Treemacs
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -479,7 +499,6 @@ The menubar has to go! Bye!
 
 ** Helm
 #+BEGIN_SRC emacs-lisp :tangle yes
-
   (use-package helm-icons
     :ensure t
     :config
@@ -490,10 +509,13 @@ The menubar has to go! Bye!
   (use-package helm
     :ensure t
     :config
-    (setq helm-split-window-inside-p t)
-    (setq helm-use-frame-when-more-than-two-windows t)
+    (setq helm-split-window-inside-p t
+          helm-use-frame-when-more-than-two-windows t
+          helm-autoresize-mode 1
+          helm-visible-mark-prefix "✓")
     (helm-autoresize-mode 1)
     )
+
 
   (use-package helm-mode
     :config (helm-mode 1))
@@ -506,18 +528,21 @@ The menubar has to go! Bye!
 
   (use-package helm-buffers
     :bind (("C-x C-b" . helm-buffers-list)
-           ("M-s m" . helm-mini))
+           ("M-s m" . helm-mini)
+           )
     :config (setq helm-buffer-max-length nil))
 
   (use-package helm-occur
-    :bind (("M-s o" . helm-occur)))
+      :bind (("M-s o" . helm-occur)))
 
-  (use-package helm-imenu
-    :bind (("M-s i" . helm-imenu))
-    :config (setq imenu-max-item-length 120))
+    (use-package helm-imenu
+      :bind (("M-s i" . helm-imenu))
+      :config (setq imenu-max-item-length 120))
 
-  (use-package helm-bookmarks
-    :bind (("M-s b" . helm-bookmarks)))
+    (use-package helm-bookmarks
+      :bind (("M-s b" . helm-bookmarks)))
+
+  (add-to-list 'helm-completion-styles-alist '(python-mode . (emacs helm helm-flex)))
 
 #+END_SRC
 
@@ -589,7 +614,7 @@ Rudimentary Rust support
     :config
     (setq rust-format-on-save t)
     :hook
-    (rust-mode . lsp-mode)
+    ;;(rust-mode . lsp-mode)
     (rust-mode . prettify-symbols-mode)
     )
 #+END_SRC
@@ -608,7 +633,7 @@ Rudimentary Rust support
     :ensure t
     )
 #+END_SRC
-** COMMENT Projectile
+** Projectile
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package projectile
     :ensure t
@@ -618,305 +643,6 @@ Rudimentary Rust support
     )
 #+END_SRC
 
-** COMMENT Ignore me, just trying out themes. And notes
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(load-theme 'base16-3024)
-(load-theme 'base16-apathy)
-(load-theme 'base16-apprentice)
-(load-theme 'base16-ashes)
-(load-theme 'base16-atelier-cave-light)
-(load-theme 'base16-atelier-cave)
-(load-theme 'base16-atelier-dune-light)
-(load-theme 'base16-atelier-dune)
-(load-theme 'base16-atelier-estuary-light)
-(load-theme 'base16-atelier-estuary)
-(load-theme 'base16-atelier-forest-light)
-(load-theme 'base16-atelier-forest)
-(load-theme 'base16-atelier-heath-light)
-(load-theme 'base16-atelier-heath)
-(load-theme 'base16-atelier-lakeside-light)
-(load-theme 'base16-atelier-lakeside)
-(load-theme 'base16-atelier-plateau-light)
-(load-theme 'base16-atelier-plateau)
-(load-theme 'base16-atelier-savanna-light)
-(load-theme 'base16-atelier-savanna)
-(load-theme 'base16-atelier-seaside-light)
-(load-theme 'base16-atelier-seaside)
-(load-theme 'base16-atelier-sulphurpool-light)
-(load-theme 'base16-atelier-sulphurpool)
-(load-theme 'base16-atlas)
-(load-theme 'base16-ayu-dark)
-(load-theme 'base16-ayu-light)
-(load-theme 'base16-ayu-mirage)
-(load-theme 'base16-aztec)
-(load-theme 'base16-bespin)
-(load-theme 'base16-black-metal-bathory)
-(load-theme 'base16-black-metal-burzum)
-(load-theme 'base16-black-metal-dark-funeral)
-(load-theme 'base16-black-metal-gorgoroth)
-(load-theme 'base16-black-metal-immortal)
-(load-theme 'base16-black-metal-khold)
-(load-theme 'base16-black-metal-marduk)
-(load-theme 'base16-black-metal-mayhem)
-(load-theme 'base16-black-metal-nile)
-(load-theme 'base16-black-metal)
-(load-theme 'base16-black-metal-venom)
-(load-theme 'base16-blueforest)
-(load-theme 'base16-blueish)
-(load-theme 'base16-brewer)
-(load-theme 'base16-bright)
-(load-theme 'base16-brogrammer)
-(load-theme 'base16-brushtrees-dark)
-(load-theme 'base16-brushtrees)
-(load-theme 'base16-caroline)
-(load-theme 'base16-catppuccin-frappe)
-(load-theme 'base16-catppuccin-latte)
-(load-theme 'base16-catppuccin-macchiato)
-(load-theme 'base16-catppuccin-mocha)
-(load-theme 'base16-catppuccin)
-(load-theme 'base16-chalk)
-(load-theme 'base16-circus)
-(load-theme 'base16-classic-dark)
-(load-theme 'base16-classic-light)
-(load-theme 'base16-codeschool)
-(load-theme 'base16-colors)
-(load-theme 'base16-cupcake)
-(load-theme 'base16-cupertino)
-(load-theme 'base16-da-one-black)
-(load-theme 'base16-da-one-gray)
-(load-theme 'base16-da-one-ocean)
-(load-theme 'base16-da-one-paper)
-(load-theme 'base16-da-one-sea)
-(load-theme 'base16-da-one-white)
-(load-theme 'base16-danqing-light)
-(load-theme 'base16-danqing)
-(load-theme 'base16-darcula)
-(load-theme 'base16-darkmoss)
-(load-theme 'base16-darktooth)
-(load-theme 'base16-darkviolet)
-(load-theme 'base16-decaf)
-(load-theme 'base16-deep-oceanic-next)
-(load-theme 'base16-default-dark)
-(load-theme 'base16-default-light)
-(load-theme 'base16-dirtysea)
-(load-theme 'base16-dracula)
-(load-theme 'base16-edge-dark)
-(load-theme 'base16-edge-light)
-(load-theme 'base16-eighties)
-(load-theme 'base16-embers-light)
-(load-theme 'base16-embers)
-(load-theme 'base16-emil)
-(load-theme 'base16-equilibrium-dark)
-(load-theme 'base16-equilibrium-gray-dark)
-(load-theme 'base16-equilibrium-gray-light)
-(load-theme 'base16-equilibrium-light)
-(load-theme 'base16-eris)
-(load-theme 'base16-espresso)
-(load-theme 'base16-eva-dim)
-(load-theme 'base16-eva)
-(load-theme 'base16-evenok-dark)
-(load-theme 'base16-everforest-dark-hard)
-(load-theme 'base16-everforest)
-(load-theme 'base16-flat)
-(load-theme 'base16-framer)
-(load-theme 'base16-fruit-soda)
-(load-theme 'base16-gigavolt)
-(load-theme 'base16-github)
-(load-theme 'base16-google-dark)
-(load-theme 'base16-google-light)
-(load-theme 'base16-gotham)
-(load-theme 'base16-grayscale-dark)
-(load-theme 'base16-grayscale-light)
-(load-theme 'base16-greenscreen)
-(load-theme 'base16-gruber)
-(load-theme 'base16-gruvbox-dark-hard)
-(load-theme 'base16-gruvbox-dark-medium)
-(load-theme 'base16-gruvbox-dark-pale)
-(load-theme 'base16-gruvbox-dark-soft)
-(load-theme 'base16-gruvbox-light-hard)
-(load-theme 'base16-gruvbox-light-medium)
-(load-theme 'base16-gruvbox-light-soft)
-(load-theme 'base16-gruvbox-material-dark-hard)
-(load-theme 'base16-gruvbox-material-dark-medium)
-(load-theme 'base16-gruvbox-material-dark-soft)
-(load-theme 'base16-gruvbox-material-light-hard)
-(load-theme 'base16-gruvbox-material-light-medium)
-(load-theme 'base16-gruvbox-material-light-soft)
-(load-theme 'base16-hardcore)
-(load-theme 'base16-harmonic16-dark)
-(load-theme 'base16-harmonic16-light)
-(load-theme 'base16-heetch-light)
-(load-theme 'base16-heetch)
-(load-theme 'base16-helios)
-(load-theme 'base16-hopscotch)
-(load-theme 'base16-horizon-dark)
-(load-theme 'base16-horizon-light)
-(load-theme 'base16-horizon-terminal-dark)
-(load-theme 'base16-horizon-terminal-light)
-(load-theme 'base16-humanoid-dark)
-(load-theme 'base16-humanoid-light)
-(load-theme 'base16-ia-dark)
-(load-theme 'base16-ia-light)
-(load-theme 'base16-icy)
-(load-theme 'base16-irblack)
-(load-theme 'base16-isotope)
-(load-theme 'base16-jabuti)
-(load-theme 'base16-kanagawa)
-(load-theme 'base16-katy)
-(load-theme 'base16-kimber)
-(load-theme 'base16-lime)
-(load-theme 'base16-macintosh)
-(load-theme 'base16-marrakesh)
-(load-theme 'base16-materia)
-(load-theme 'base16-material-darker)
-(load-theme 'base16-material-lighter)
-(load-theme 'base16-material-palenight)
-(load-theme 'base16-material)
-(load-theme 'base16-material-vivid)
-(load-theme 'base16-measured-dark)
-(load-theme 'base16-measured-light)
-(load-theme 'base16-mellow-purple)
-(load-theme 'base16-mexico-light)
-(load-theme 'base16-mocha)
-(load-theme 'base16-monokai)
-(load-theme 'base16-moonlight)
-(load-theme 'base16-mountain)
-(load-theme 'base16-nebula)
-(load-theme 'base16-nord-light)
-(load-theme 'base16-nord)
-(load-theme 'base16-nova)
-(load-theme 'base16-ocean)
-(load-theme 'base16-oceanicnext)
-(load-theme 'base16-one-light)
-(load-theme 'base16-onedark-dark)
-(load-theme 'base16-onedark)
-(load-theme 'base16-outrun-dark)
-(load-theme 'base16-oxocarbon-dark)
-(load-theme 'base16-oxocarbon-light)
-(load-theme 'base16-pandora)
-(load-theme 'base16-papercolor-dark)
-(load-theme 'base16-papercolor-light)
-(load-theme 'base16-paraiso)
-(load-theme 'base16-pasque)
-(load-theme 'base16-phd)
-(load-theme 'base16-pico)
-(load-theme 'base16-pinky)
-(load-theme 'base16-pop)
-(load-theme 'base16-porple)
-(load-theme 'base16-precious-dark-eleven)
-(load-theme 'base16-precious-dark-fifteen)
-(load-theme 'base16-precious-light-warm)
-(load-theme 'base16-precious-light-white)
-(load-theme 'base16-primer-dark-dimmed)
-(load-theme 'base16-primer-dark)
-(load-theme 'base16-primer-light)
-(load-theme 'base16-purpledream)
-(load-theme 'base16-qualia)
-(load-theme 'base16-railscasts)
-(load-theme 'base16-rebecca)
-(load-theme 'base16-rose-pine-dawn)
-(load-theme 'base16-rose-pine-moon)
-(load-theme 'base16-rose-pine)
-(load-theme 'base16-saga)
-(load-theme 'base16-sagelight)
-(load-theme 'base16-sakura)
-(load-theme 'base16-sandcastle)
-(load-theme 'base16-selenized-black)
-(load-theme 'base16-selenized-dark)
-(load-theme 'base16-selenized-light)
-(load-theme 'base16-selenized-white)
-(load-theme 'base16-seti)
-(load-theme 'base16-shades-of-purple)
-(load-theme 'base16-shadesmear-dark)
-(load-theme 'base16-shadesmear-light)
-(load-theme 'base16-shapeshifter)
-(load-theme 'base16-silk-dark)
-(load-theme 'base16-silk-light)
-(load-theme 'base16-snazzy)
-(load-theme 'base16-solarflare-light)
-(load-theme 'base16-solarflare)
-(load-theme 'base16-solarized-dark)
-(load-theme 'base16-solarized-light)
-(load-theme 'base16-spaceduck)
-(load-theme 'base16-spacemacs)
-(load-theme 'base16-sparky)
-(load-theme 'base16-standardized-dark)
-(load-theme 'base16-standardized-light)
-(load-theme 'base16-stella)
-(load-theme 'base16-still-alive)
-(load-theme 'base16-summercamp)
-(load-theme 'base16-summerfruit-dark)
-(load-theme 'base16-summerfruit-light)
-(load-theme 'base16-synth-midnight-dark)
-(load-theme 'base16-synth-midnight-light)
-(load-theme 'base16-tango)
-(load-theme 'base16-tarot)
-(load-theme 'base16-tender)
-(load-theme 'base16-terracotta-dark)
-(load-theme 'base16-terracotta)
-(load-theme 'base16)
-(load-theme 'base16-tokyo-city-dark)
-(load-theme 'base16-tokyo-city-light)
-(load-theme 'base16-tokyo-city-terminal-dark)
-(load-theme 'base16-tokyo-city-terminal-light)
-(load-theme 'base16-tokyo-night-dark)
-(load-theme 'base16-tokyo-night-light)
-(load-theme 'base16-tokyo-night-moon)
-(load-theme 'base16-tokyo-night-storm)
-(load-theme 'base16-tokyo-night-terminal-dark)
-(load-theme 'base16-tokyo-night-terminal-light)
-(load-theme 'base16-tokyo-night-terminal-storm)
-(load-theme 'base16-tokyodark-terminal)
-(load-theme 'base16-tokyodark)
-(load-theme 'base16-tomorrow-night-eighties)
-(load-theme 'base16-tomorrow-night)
-(load-theme 'base16-tomorrow)
-(load-theme 'base16-tube)
-(load-theme 'base16-twilight)
-(load-theme 'base16-unikitty-dark)
-(load-theme 'base16-unikitty-light)
-(load-theme 'base16-unikitty-reversible)
-(load-theme 'base16-uwunicorn)
-(load-theme 'base16-vesper)
-(load-theme 'base16-vice)
-(load-theme 'base16-vulcan)
-(load-theme 'base16-windows-10-light)
-(load-theme 'base16-windows-10)
-(load-theme 'base16-windows-95-light)
-(load-theme 'base16-windows-95)
-(load-theme 'base16-windows-highcontrast-light)
-(load-theme 'base16-windows-highcontrast)
-(load-theme 'base16-windows-nt-light)
-(load-theme 'base16-windows-nt)
-(load-theme 'base16-woodland)
-(load-theme 'base16-xcode-dusk)
-(load-theme 'base16-zenbones)
-(load-theme 'base16-zenburn)
-(load-theme 'birds-of-paradise-plus)
-(load-theme 'ewal-spacemacs-classic)
-(load-theme 'ewal-spacemacs-modern)
-(load-theme 'spacemacs-dark)
-(load-theme 'spacemacs-light)
-(load-theme 'spacemacs)
-(load-theme 'adwaita)
-(load-theme 'deeper-blue)
-(load-theme 'dichromacy)
-(load-theme 'leuven-dark)
-(load-theme 'leuven)
-(load-theme 'light-blue)
-(load-theme 'manoj-dark)
-(load-theme 'misterioso)
-(load-theme 'modus-operandi)
-(load-theme 'modus-vivendi)
-(load-theme 'tango-dark)
-(load-theme 'tango)
-(load-theme 'tsdh-dark)
-(load-theme 'tsdh-light)
-(load-theme 'wheatgrass)
-(load-theme 'whiteboard)
-(load-theme 'wombat)
-#+END_SRC
 ** Notes
 Lookin into org-mode styling:
 https://sophiebos.io/posts/beautifying-emacs-org-mode/
