@@ -213,11 +213,15 @@ Will install a vast range of different themes.
   :ensure t
   :hook (after-init . doom-modeline-mode)
   )
+  (setq doom-modeline-height 40)
+  (setq doom-modeline-time-analogue-clock nil)
 #+END_SRC
 *** Time
 Shows the time in 24hr format
 #+BEGIN_SRC emacs-lisp :tangle yes
   (setq display-time-24hr-format t)
+  (setq display-time-default-load-average nil)
+  (setq display-time-mail-directory nil)
   (display-time-mode 1)
 #+END_SRC
 
