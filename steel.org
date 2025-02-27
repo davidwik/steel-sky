@@ -589,6 +589,7 @@ Rudimentary Rust support
     :config
     (setq rust-format-on-save t)
     :hook
+    (rust-mode . lsp-mode)
     (rust-mode . prettify-symbols-mode)
     )
 #+END_SRC
