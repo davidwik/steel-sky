@@ -4,7 +4,7 @@
   ;;; Steel sky config
   ;;; If this file has an .el ending it is generated from steel.org
   ;;; please edit that file instead.  Otherwise you are in the
-  ;;; right place =) 
+  ;;; right place =)
 #+END_SRC
 ** Put temp-savefiles somewhere else, not polluting the working directory
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -162,7 +162,7 @@ Will install a vast range of different themes.
       :ensure t
       )
 
-  
+
     (use-package ewal
       :ensure t
       :init (setq ewal-use-built-in-always-p nil
@@ -248,7 +248,7 @@ Get rid of *Messages* *Completions* while sometimes informative, mostly annoying
   ;;(setq-default message-log-max nil)
   ;;(kill-buffer "*Messages*")
 
-  ;; Only quick swap buffers that are a file. 
+  ;; Only quick swap buffers that are a file.
   (set-frame-parameter (selected-frame) 'buffer-predicate #'buffer-file-name)
 
   ;; Alternatively
@@ -519,9 +519,10 @@ The menubar has to go! Bye!
     :config
     (setq helm-split-window-inside-p t
           helm-use-frame-when-more-than-two-windows nil
-          helm-autoresize-mode 1
-          helm-visible-mark-prefix "✓")
-    (helm-autoresize-mode 1)
+          helm-autoresize-mode t
+          helm-visible-mark-prefix "✓"
+          )
+    (helm-autoresize-mode t)
     )
 
 
@@ -541,28 +542,25 @@ The menubar has to go! Bye!
     :config (setq helm-buffer-max-length nil))
 
   (use-package helm-occur
-      :bind (("M-s o" . helm-occur)))
+    :bind (("M-s o" . helm-occur)))
 
-    (use-package helm-imenu
+  (use-package helm-imenu
       :bind (("M-s i" . helm-imenu))
       :config (setq imenu-max-item-length 120))
 
-    (use-package helm-bookmarks
+  (use-package helm-bookmarks
       :bind (("M-s b" . helm-bookmarks)))
 
   (add-to-list 'helm-completion-styles-alist '(python-mode . (emacs helm helm-flex)))
 
-  ;; This project lacks maintainer.... 
-  (use-package helm-posframe
-    :ensure t
-    :config (helm-posframe-enable)
-    (setq helm-posframe-parameters
-          '((left-fringe . 20)
-            (right-fring . 20)))
-    )
+  (setq helm-display-function 'helm-display-buffer-in-own-frame
+        helm-display-buffer-reuse-frame t
+        helm-use-undecorated-frame-option t
+        helm-display-buffer-width 110
+        )
+
 
 #+END_SRC
-
 ** Dashboard
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package dashboard
@@ -640,7 +638,7 @@ Rudimentary Rust support
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package web-mode
     :ensure t
-  )
+    )
 #+END_SRC
 
 ** Extras
@@ -649,6 +647,7 @@ Rudimentary Rust support
   (use-package chatgpt-shell
     :ensure t
     )
+
 #+END_SRC
 ** Unused
 *** COMMENT Eglot
@@ -663,12 +662,12 @@ Rudimentary Rust support
     (add-to-list 'eglot-server-programs
                  `(python-mode
                    . ,(eglot-alternatives '(
-                                            ("basedpyright-langserver" "--stdio")                                    
+                                            ("basedpyright-langserver" "--stdio")
                                             ))))
     )
   (use-package flymake-ruff
     :ensure t
-    :hook(eglot-managed-mode . flymake-ruff-load)     
+    :hook(eglot-managed-mode . flymake-ruff-load)
     )
 #+END_SRC
 *** COMMENT Projectile
