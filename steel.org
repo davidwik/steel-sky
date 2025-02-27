@@ -68,25 +68,6 @@
             )
 #+END_SRC
 
-** Font config
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (if(file-directory-p "~/.local/share/fonts")
-     (message "Local font directory already exists.")
-    (make-directory "~/.local/share/fonts")
-     )
-
-  (if(file-exists-p "~/.local/share/fonts/envy.ttf")
-      (progn
-	(message "Font already installed!")
-	)
-    (progn
-      (copy-file (expand-file-name "ttf/envy.ttf" user-emacs-directory)  "~/.local/share/fonts/" nil)
-      (shell-command "fc-cache -f -v" t)
-      )
-    )
-
- #+END_SRC
-
 ** Install required packages
 #+BEGIN_SRC emacs-lisp :tangle yes
   (require 'package)
@@ -118,72 +99,132 @@
   ;;(package-upgrade 'seq)
   #+END_SRC
 
+** Icons and special fonts
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (if(file-directory-p "~/.local/share/fonts")
+      (message "Local font directory already exists.")
+    (make-directory "~/.local/share/fonts")
+    )
+
+  (if(file-exists-p "~/.local/share/fonts/envy.ttf")
+      (progn
+        (message "Font already installed!")
+        )
+    (progn
+      (copy-file (expand-file-name "ttf/envy.ttf" user-emacs-directory)  "~/.local/share/fonts/" nil)
+      (shell-command "fc-cache -f -v" t)
+      )
+    )
+
+
+  (use-package all-the-icons
+    :ensure t
+    :config
+        (when (and (not (file-exists-p "~/.emacs.d/.install-flags/all-the-icon-fonts-installed.flag"))
+                   (package-installed-p 'all-the-icons))
+          (message "Running post-install setup for some-package...")
+          (all-the-icons-install-fonts t)
+          (write-region "Installed\n" nil "~/.emacs.d/.install-flags/all-the-icon-fonts-installed.flag"))
+        )
+
+  (use-package nerd-icons
+    :ensure t
+        :config
+        (when (and (not (file-exists-p "~/.emacs.d/.install-flags/nerd-icons-fonts-installed.flag"))
+                   (package-installed-p 'nerd-icons))
+          (message "Running post-install setup for some-package...")
+          (nerd-icons-install-fonts t)
+          (write-region "Installed\n" nil "~/.emacs.d/.install-flags/nerd-icons-fonts-installed.flag"))
+        )
+
+    #+END_SRC
+
 ** Install theming
 Will install a vast range of different themes.
 #+BEGIN_SRC emacs-lisp :tangle yes
 
-  ;; Cool themes,
-  ;; spacemacs-dark
-  ;; base16-mocha
-  ;; doom-laserwave
-  ;; doom-city-lights
-  ;; base16-gruvbox-material-dark-hard
-  ;; base16-catppuccin-mocha
-  (setq chtheme 'spacemacs-dark)
+    ;; Cool themes,
+    ;; spacemacs-dark
+    ;; base16-mocha
+    ;; doom-laserwave
+    ;; doom-city-lights
+    ;; base16-gruvbox-material-dark-hard
+    ;; base16-catppuccin-mocha
+    (setq chtheme 'spacemacs-dark)
 
-  (use-package base16-theme
-    :ensure t
-    )
-  (use-package doom-themes
-    :ensure t
-    )
-  (use-package birds-of-paradise-plus-theme
-    :ensure t
-    )
+    (use-package base16-theme
+      :ensure t
+      )
+    (use-package doom-themes
+      :ensure t
+      )
+    (use-package birds-of-paradise-plus-theme
+      :ensure t
+      )
 
   
-  (use-package ewal
-    :ensure t
-    :init (setq ewal-use-built-in-always-p nil
-                ewal-use-built-in-on-failure-p t
-                ewal-built-in-palette "sexy-material"))
+    (use-package ewal
+      :ensure t
+      :init (setq ewal-use-built-in-always-p nil
+                  ewal-use-built-in-on-failure-p t
+                  ewal-built-in-palette "sexy-material"))
 
-  (use-package ewal-spacemacs-themes
-    :ensure t
-    :init (progn
-            (setq spacemacs-theme-underline-parens t
-                  my:rice:font (font-spec
-                                :family "Envy Code R"
-                                :weight 'semi-bold
-                                :size 12.0))
-            (show-paren-mode +1)
-            (global-hl-line-mode)
-            (set-frame-font my:rice:font nil t)
-            (add-to-list  'default-frame-alist
-                          `(font . ,(font-xlfd-name my:rice:font))))
-    :config (progn
-              (load-theme chtheme t)
-              (enable-theme chtheme )))
+    (use-package ewal-spacemacs-themes
+      :ensure t
+      :init (progn
+              (setq spacemacs-theme-underline-parens t
+                    my:rice:font (font-spec
+                                  :family "Envy Code R"
+                                  :weight 'semi-bold
+                                  :size 12.0))
+              (show-paren-mode +1)
+              (global-hl-line-mode)
+              (set-frame-font my:rice:font nil t)
+              (add-to-list  'default-frame-alist
+                            `(font . ,(font-xlfd-name my:rice:font))))
+      :config (progn
+                (load-theme chtheme t)
+                (enable-theme chtheme )))
 
 
-  (use-package ewal-evil-cursors
-    :ensure t
-    :after (ewal-spacemacs-themes)
-    :config (ewal-evil-cursors-get-colors
-             :apply t :spaceline t))
+    (use-package ewal-evil-cursors
+      :ensure t
+      :after (ewal-spacemacs-themes)
+      :config (ewal-evil-cursors-get-colors
+               :apply t :spaceline t))
 
-  (use-package spaceline
-    :ensure t
-    :after (ewal-evil-cursors winum)
-    :init (setq powerline-default-separator nil)
-    :config (spaceline-spacemacs-theme))
+  ;;  (use-package spaceline
+  ;;    :ensure t
+  ;;    :after (ewal-evil-cursors winum)
+  ;;    :init (setq powerline-default-separator nil)
+  ;;   :config (spaceline-spacemacs-theme))
 
-  ;;  (use-package spaceline-all-the-icons
-  ;;      :ensure t
-                                          ;      :after spaceline
-  ;;      :config
-  ;;      (spaceline-all-the-icons-theme)
-  ;;      )
+    ;;  (use-package spaceline-all-the-icons
+    ;;      :ensure t
+                                            ;      :after spaceline
+    ;;      :config
+    ;;      (spaceline-all-the-icons-theme)
+    ;;      )
+#+END_SRC
+
+** Doom-modeline
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package doom-modeline
+  :ensure t
+  :hook (after-init . doom-modeline-mode)
+  )
+#+END_SRC
+*** Time
+Shows the time in 24hr format
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq display-time-24hr-format t)
+  (display-time-mode 1)
+#+END_SRC
+
+*** Battery
+Show battery information if enabled
+#+BEGIN_SRC emacs-lisp :tangle yes
+(display-battery-mode t)
 #+END_SRC
 
 ** Multicursors
@@ -199,20 +240,6 @@ Will install a vast range of different themes.
       )
     )
 #+END_SRC
-
-** Icons
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package all-the-icons
-    :ensure t
-    :config
-    (when (and (not (file-exists-p "~/.emacs.d/.install-flags/all-the-icon-fonts-installed.flag"))
-               (package-installed-p 'all-the-icons))
-      (message "Running post-install setup for some-package...")
-      (all-the-icons-install-fonts t)
-      (write-region "Installed\n" nil "~/.emacs.d/.install-flags/all-the-icon-fonts-installed.flag"))
-    )
-
-    #+END_SRC
 
 ** Hide buffers
 Get rid of *Messages* *Completions* while sometimes informative, mostly annoying.
@@ -281,6 +308,7 @@ The menubar has to go! Bye!
     :config
     (progn
       (setq
+       org-startup-folded t
        org-auto-align-tags nil
        org-tags-column 0
        org-catch-invisible-edits 'show-and-error
@@ -356,26 +384,6 @@ The menubar has to go! Bye!
     :hook (python-mode . flymake-ruff-load)
     )
 
-#+END_SRC
-** COMMENT Eglot
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package eglot
-    :ensure t
-    :defer t
-    :hook (
-           (python-mode . eglot-ensure)
-           (rust-mode . eglot-ensure))
-    :config
-    (add-to-list 'eglot-server-programs
-                 `(python-mode
-                   . ,(eglot-alternatives '(
-                                            ("basedpyright-langserver" "--stdio")                                    
-                                            ))))
-    )
-  (use-package flymake-ruff
-    :ensure t
-    :hook(eglot-managed-mode . flymake-ruff-load)     
-    )
 #+END_SRC
 ** Treemacs
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -510,7 +518,7 @@ The menubar has to go! Bye!
     :ensure t
     :config
     (setq helm-split-window-inside-p t
-          helm-use-frame-when-more-than-two-windows t
+          helm-use-frame-when-more-than-two-windows nil
           helm-autoresize-mode 1
           helm-visible-mark-prefix "✓")
     (helm-autoresize-mode 1)
@@ -543,6 +551,15 @@ The menubar has to go! Bye!
       :bind (("M-s b" . helm-bookmarks)))
 
   (add-to-list 'helm-completion-styles-alist '(python-mode . (emacs helm helm-flex)))
+
+  ;; This project lacks maintainer.... 
+  (use-package helm-posframe
+    :ensure t
+    :config (helm-posframe-enable)
+    (setq helm-posframe-parameters
+          '((left-fringe . 20)
+            (right-fring . 20)))
+    )
 
 #+END_SRC
 
@@ -633,7 +650,28 @@ Rudimentary Rust support
     :ensure t
     )
 #+END_SRC
-** Projectile
+** Unused
+*** COMMENT Eglot
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package eglot
+    :ensure t
+    :defer t
+    :hook (
+           (python-mode . eglot-ensure)
+           (rust-mode . eglot-ensure))
+    :config
+    (add-to-list 'eglot-server-programs
+                 `(python-mode
+                   . ,(eglot-alternatives '(
+                                            ("basedpyright-langserver" "--stdio")                                    
+                                            ))))
+    )
+  (use-package flymake-ruff
+    :ensure t
+    :hook(eglot-managed-mode . flymake-ruff-load)     
+    )
+#+END_SRC
+*** COMMENT Projectile
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package projectile
     :ensure t
