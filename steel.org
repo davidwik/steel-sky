@@ -26,6 +26,13 @@
 (savehist-mode t)
 (setq history-length 5)
 #+END_SRC
+*** Omit warnings
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq native-comp-async-report-warnings-errors 'silent)
+#+END_SRC
+
+
+
 ** Identation
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; Defining indentation
@@ -608,21 +615,36 @@ Include the yasnippet in our config:
   (yas-global-mode 1))
 #+END_SRC
 ** Languages
-*** Python
+*** Python stuff
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package python
-    :hook
-    (python-mode . lsp-mode)
-    (python-mode . ruff-format-on-save-mode)
-    (python-mode . display-fill-column-indicator-mode)
-    )
+    (use-package python
+      :hook
+      (python-mode . lsp-mode)
+      (python-mode . ruff-format-on-save-mode)
+      (python-mode . display-fill-column-indicator-mode)
+      )
 
-  ;; Put the column indicator at line 79
-  (add-hook 'python-mode-hook
-            (lambda ()
-              (set-fill-column 79)
-                )
-            )
+    (use-package pyvenv
+      :ensure t
+      :config
+      (pyvenv-mode t)
+      (setq pyvenv-post-activate-hooks
+            (list (lambda ()
+                    (setq python-shell-interpreter (concat pyvenv-virtual-env "bin/ipython")))))
+      (setq pyvenv-post-deactivate-hooks
+            (list (lambda ()
+                    (setq python-shell-interpreter "python3"))))
+      )
+
+
+    ;; Put the column indicator at line 79
+    (add-hook 'python-mode-hook
+              (lambda ()
+                (set-fill-column 79)
+                  )
+              )
+  ;;(when (executable-find (concat pyvenv-virtual-env "bin/ipython"))
+  ;;  (setq python-shell-interpreter (concat pyvenv-virtual-env "bin/ipython")))
 
 #+END_SRC
 *** RUST
