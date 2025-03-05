@@ -98,9 +98,6 @@
         (when (not (package-installed-p pkg))
           (package-install pkg)))))
   (provide 'custom/packages)
-
-  ;;(setq package-install-upgrade-built-in t)
-  ;;(package-upgrade 'seq)
   #+END_SRC
 
 ** Icons and special fonts
@@ -195,19 +192,7 @@ Will install a vast range of different themes.
     :after (ewal-spacemacs-themes)
     :config (ewal-evil-cursors-get-colors
              :apply t :spaceline t))
-
-  ;;  (use-package spaceline
-  ;;    :ensure t
-  ;;    :after (ewal-evil-cursors winum)
-  ;;    :init (setq powerline-default-separator nil)
-  ;;   :config (spaceline-spacemacs-theme))
-
-  ;;  (use-package spaceline-all-the-icons
-  ;;      :ensure t
-                                          ;      :after spaceline
-  ;;      :config
-  ;;      (spaceline-all-the-icons-theme)
-  ;;      )
+  
 #+END_SRC
 ** Doom-modeline
 #+BEGIN_SRC emacs-lisp :tangle yes
