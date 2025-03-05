@@ -99,7 +99,16 @@
           (package-install pkg)))))
   (provide 'custom/packages)
   #+END_SRC
-
+** Upgrade packages
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package auto-package-update
+    :ensure t
+    :config
+    (setq auto-package-update-delete-old-versions t
+          auto-package-update-interval 5)
+    (auto-package-update-maybe)
+    )
+#+END_SRC
 ** Icons and special fonts
 #+BEGIN_SRC emacs-lisp :tangle yes
   (if(file-directory-p "~/.local/share/fonts")
