@@ -179,7 +179,7 @@ Will install a vast range of different themes.
                   my:rice:font (font-spec
                                 :family "Envy Code R"
                                 :weight 'semi-bold
-                                :size 12.0))
+                                :size 11.0))
             (show-paren-mode +1)
             (global-hl-line-mode)
             (set-frame-font my:rice:font nil t)
