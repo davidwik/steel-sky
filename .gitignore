@@ -22,3 +22,4 @@ session.*
 url/
 .chatgpt-shell.el
 projects
+.last-package-update-day
