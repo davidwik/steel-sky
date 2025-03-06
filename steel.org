@@ -374,13 +374,14 @@ The menubar has to go! Bye!
   (use-package ruff-format
     :ensure t
     )
-
-  (use-package flymake-ruff
-    :ensure t
-    :hook (python-mode . flymake-ruff-load)
-    )
-
 #+END_SRC
+** FlyCheck
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package flycheck
+    :ensure t
+    :init (global-flycheck-mode)
+    )
+    #+END_SRC
 ** Treemacs
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package treemacs
@@ -603,8 +604,8 @@ Include the yasnippet in our config:
     :hook
     (python-mode . lsp-mode)
     (python-mode . ruff-format-on-save-mode)
-    (python-mode . display-fill-column-indicator-mode)
-    )
+    (python-mode . display-fill-column-indicator-mode) 
+   )
 
   (use-package pyvenv
     :ensure t
@@ -618,16 +619,13 @@ Include the yasnippet in our config:
                   (setq python-shell-interpreter "python3"))))
     )
 
-
   ;; Put the column indicator at line 79
   (add-hook 'python-mode-hook
             (lambda ()
               (set-fill-column 79)
+   
               )
             )
-  ;;(when (executable-find (concat pyvenv-virtual-env "bin/ipython"))
-  ;;  (setq python-shell-interpreter (concat pyvenv-virtual-env "bin/ipython")))
-
 #+END_SRC
 *** RUST
 Rudimentary Rust support
