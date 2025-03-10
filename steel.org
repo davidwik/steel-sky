@@ -377,10 +377,14 @@ The menubar has to go! Bye!
 #+END_SRC
 ** FlyCheck
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package flycheck
-    :ensure t
-    :init (global-flycheck-mode)
-    )
+   (use-package flycheck
+     :ensure t
+     :init (global-flycheck-mode)
+     :config
+      '(flycheck-check-syntax-automatically (quote
+                                             (save idle-change mode-enabled)))
+      '(flycheck-idle-change-delay 8) ;; Set delay based on what suits you the best
+     )
     #+END_SRC
 ** Treemacs
 #+BEGIN_SRC emacs-lisp :tangle yes
