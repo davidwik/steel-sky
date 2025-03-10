@@ -631,6 +631,15 @@ Include the yasnippet in our config:
               )
             )
 #+END_SRC
+*** LUA
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package lua-mode
+    :ensure t
+    :mode "\\.lua\\'"
+    :interpreter "lua"
+    )
+#+END_SRC
+
 *** RUST
 Rudimentary Rust support
 #+BEGIN_SRC emacs-lisp :tangle yes
