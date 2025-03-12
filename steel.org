@@ -601,7 +601,7 @@ Include the yasnippet in our config:
     (yas-global-mode 1)
     )
 #+END_SRC
-** Languages
+** Languages and formats
 *** Python stuff
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package python
@@ -657,6 +657,17 @@ Rudimentary Rust support
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package web-mode
     :ensure t
+    )
+#+END_SRC
+
+*** Conf mode
+We sould like to use conf mode on some system config files like systemd files.
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package conf-mode
+    :mode (
+           "\\.service?\\'"
+           "\\.timer?\\'"
+           )
     )
 #+END_SRC
 
