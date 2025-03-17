@@ -315,7 +315,7 @@ org-mode is nowadays bundled with Emacs. But I also added some extra packages.
   (use-package olivetti
     :ensure t
     :init
-    (setq olivetti-body-width 0.5)
+    (setq olivetti-body-width 0.3)
     )
 
   (use-package org
@@ -324,16 +324,15 @@ org-mode is nowadays bundled with Emacs. But I also added some extra packages.
     :hook
     (org-mode . olivetti-mode)
     (org-mode . visual-line-mode)
-    (org-mode . org-indent-mode)
+    ;; (org-mode . org-indent-mode)
     (org-mode . variable-pitch-mode)
     :config
     (progn
-      (add-hook 'org-mode-hook #'org-modern-mode)
-
+      ;;(add-hook 'org-mode-hook #'org-modern-mode)
       (setq org-hide-leading-stars nil)
       (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
       ;; Resize Org headings
-      (dolist (face '((org-level-1 . 1.6)
+      (dolist (face '((org-level-1 . 1.8)
                       (org-level-2 . 1.4)
                       (org-level-3 . 1.2)
                       (org-level-4 . 1.0)
@@ -352,26 +351,26 @@ org-mode is nowadays bundled with Emacs. But I also added some extra packages.
       (set-face-attribute 'org-block nil
                           :foreground nil
                           :inherit 'fixed-pitch
-                          :height 0.85)
+                          :height 0.8)
       (set-face-attribute 'org-code nil
                           :inherit '(shadow fixed-pitch)
                           :height 0.85
                           )
-      (set-face-attribute 'org-verbatim nil
+      (set-face-attribute 'org-verbatim t
                           :inherit '(shadow fixed-pitch)
                           :height 0.85
                           )
       (set-face-attribute 'org-special-keyword nil
                           :inherit '(font-lock-comment-face fixed-pitch))
-      (set-face-attribute 'org-meta-line nil
+      (set-face-attribute 'org-meta-line t
                           :inherit '(font-lock-comment-face fixed-pitch))
-      (set-face-attribute 'org-checkbox nil
+      (set-face-attribute 'org-checkbox t
                           :inherit 'fixed-pitch)
 
       ;; Make the document title a bit bigger
       (set-face-attribute 'org-document-title t
                           :font "Envy Code R" :weight
-                          'bold :height 2
+                          'bold :height 3
                           )
       )
     )
@@ -389,13 +388,13 @@ https://github.com/minad/org-modern
           org-fold-catch-invisible-edits 'show-and-error
           org-special-ctrl-a/e t
           org-insert-heading-respect-content t
-          ;;org-bullets-bullet-list '(" ")
-          ;;org-modern-list '(" ")
           ;; Don't style the following
-          org-modern-tag nil
+          org-modern-tag nil 
           org-modern-priority nil
           org-modern-todo nil
           org-modern-table nil
+          org-modern-replace-stars nil
+          org-modern-hide-stars t
           org-ellipsis "…"
           ;; Agenda styling
           org-agenda-tags-column 0
@@ -410,23 +409,6 @@ https://github.com/minad/org-modern
     )
 #+END_SRC
 
-And org-superstar
-https://github.com/integral-dw/org-superstar-mode
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package org-superstar
-    :ensure t
-    :config
-    (setq org-superstar-special-todo-items t) ;; Makes TODO header bullets into boxes
-    (setq org-superstar-todo-bullet-alist '(("TODO" . 9744)
-                                            ("DONE" . 9744)
-                                            ("READ" . 9744)
-                                            ("IDEA" . 9744)
-                                            ("WAITING" . 9744)
-                                            ("CANCELLED" . 9744)
-                                            ("PROJECT" . 9744)
-                                            ("POSTPONED" . 9744)))
-    )
-#+END_SRC
 ** Markdown mode
 https://jblevins.org/projects/markdown-mode/
 A lesser format than .org, but it's used everywhere 
@@ -839,7 +821,24 @@ Unused packages or packages not yet configures that are commented out and not in
     :bind-keymap ("C-c p" . projectile-command-map)
     )
 #+END_SRC
-
+*** COMMENT asdvas
+And org-superstar
+https://github.com/integral-dw/org-superstar-mode
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package org-superstar
+    :ensure t
+    :config
+    (setq org-superstar-special-todo-items t) ;; Makes TODO header bullets into boxes
+    (setq org-superstar-todo-bullet-alist '(("TODO" . 9744)
+                                            ("DONE" . 9744)
+                                            ("READ" . 9744)
+                                            ("IDEA" . 9744)
+                                            ("WAITING" . 9744)
+                                            ("CANCELLED" . 9744)
+                                            ("PROJECT" . 9744)
+                                            ("POSTPONED" . 9744)))
+    )
+#+END_SRC
 ** Notes
 Links and articles about elisp/emacs and other packages I found interesting:
 
