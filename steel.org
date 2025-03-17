@@ -71,10 +71,9 @@
               )
             )
 #+END_SRC
-
 ** Install required packages
 https://github.com/jwiegley/use-package
-Most of the setup is using package.el for installation of elisp packages. But first the repositories needs to be defined. 
+Most of the setup is using package.el for installation of elisp packages. But first the repositories needs to be defined.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (require 'package)
@@ -116,7 +115,7 @@ Automatically keeps all the Emacs packages fresh!
     )
 #+END_SRC
 ** Icons and special fonts
-Checks whether my favorite font is installed otherwise it will copy it to the default,  user based font-dir. 
+Checks whether my favorite font is installed otherwise it will copy it to the default,  user based font-dir.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (if(file-directory-p "~/.local/share/fonts")
       (message "Local font directory already exists.")
@@ -161,9 +160,8 @@ https://github.com/rainstormstudio/nerd-icons.el
       (write-region "Installed\n" nil "~/.emacs.d/.install-flags/nerd-icons-fonts-installed.flag"))
     )
 #+END_SRC
-
 ** Install theming
-Installs an array of different themes. 
+Installs an array of different themes.
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; Cool themes,
   ;; spacemacs-dark
@@ -214,7 +212,7 @@ Installs an array of different themes.
     :after (ewal-spacemacs-themes)
     :config (ewal-evil-cursors-get-colors
              :apply t :spaceline t))
-  
+
 #+END_SRC
 ** Doom-modeline
 https://github.com/seagle0128/doom-modeline
@@ -240,7 +238,6 @@ Show battery information if enabled
 #+BEGIN_SRC emacs-lisp :tangle yes
   (display-battery-mode t)
 #+END_SRC
-
 ** Multi-cursors
 https://github.com/magnars/multiple-cursors.el
 "Because sometimes one cursor ain't enough" - Stephen Hawking (or an impersonator)
@@ -256,10 +253,9 @@ https://github.com/magnars/multiple-cursors.el
       )
     )
 #+END_SRC
-
 ** Hide buffers
 Get rid of *Messages* *Completions* while sometimes informative, mostly annoying. And bypassing
-the startup message, since we want to use the dashboard. 
+the startup message, since we want to use the dashboard.
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; Removes *messages* from the buffer.
   ;;(setq-default message-log-max nil)
@@ -288,14 +284,12 @@ the startup message, since we want to use the dashboard.
 
   (setq inhibit-startup-message t)   ; Don't want any startup message
   #+END_SRC
-
 ** Line numbers
-Coding with line numbers is a joy and a priviledge! 
+Coding with line numbers is a joy and a priviledge!
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; Alternatively, to use it only in programming modes:
   (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 #+END_SRC
-
 ** Get rid off menu bar and Scrollbars and set
 The menubar has to go! Bye!
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -307,15 +301,12 @@ The menubar has to go! Bye!
 ** Org-mode
 https://orgmode.org/
 The main reason for Emacs? The purpose of life?
-org-mode is nowadays bundled with Emacs. But I also added some extra packages. 
+org-mode is nowadays bundled with Emacs. But I also added some extra packages.
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package org-indent
-    :ensure nil 
-    )
   (use-package olivetti
     :ensure t
     :init
-    (setq olivetti-body-width 0.3)
+    (setq olivetti-body-width 0.4)
     )
 
   (use-package org
@@ -329,7 +320,8 @@ org-mode is nowadays bundled with Emacs. But I also added some extra packages.
     :config
     (progn
       ;;(add-hook 'org-mode-hook #'org-modern-mode)
-      (setq org-hide-leading-stars nil)
+      (setq org-hide-leading-stars nil
+            )
       (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
       ;; Resize Org headings
       (dolist (face '((org-level-1 . 1.8)
@@ -345,11 +337,7 @@ org-mode is nowadays bundled with Emacs. But I also added some extra packages.
                             :weight 'bold
                             :height (cdr face))
         )
-      (set-face-attribute 'org-indent nil
-                          :inherit '(org-hide fixed-pitch)
-                          )
-      (set-face-attribute 'org-block nil
-                          :foreground nil
+      (set-face-attribute 'org-block t
                           :inherit 'fixed-pitch
                           :height 0.8)
       (set-face-attribute 'org-code nil
@@ -384,16 +372,19 @@ https://github.com/minad/org-modern
     :config
     (setq org-startup-folded t
           org-auto-align-tags t
+          org-pretty-entities t
           org-tags-column 0
           org-fold-catch-invisible-edits 'show-and-error
           org-special-ctrl-a/e t
           org-insert-heading-respect-content t
           ;; Don't style the following
-          org-modern-tag nil 
+          org-modern-tag t
           org-modern-priority nil
-          org-modern-todo nil
-          org-modern-table nil
-          org-modern-replace-stars nil
+          org-modern-todo t
+          org-modern-table t
+          org-modern-star 'replace
+          ;; org-modern-replace-stars t
+
           org-modern-hide-stars t
           org-ellipsis "…"
           ;; Agenda styling
@@ -408,10 +399,9 @@ https://github.com/minad/org-modern
     (global-org-modern-mode)
     )
 #+END_SRC
-
 ** Markdown mode
 https://jblevins.org/projects/markdown-mode/
-A lesser format than .org, but it's used everywhere 
+A lesser format than .org, but it's used everywhere
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package markdown-mode
     :ensure t
@@ -472,7 +462,7 @@ Support for language servers, such as pyright and ruff (only linting)
 #+END_SRC
 ** FlyCheck
 https://www.flycheck.org/en/latest/
-A detailed linter frontend. 
+A detailed linter frontend.
 #+BEGIN_SRC emacs-lisp :tangle yes
    (use-package flycheck
      :ensure t
@@ -486,7 +476,7 @@ A detailed linter frontend.
 ** Treemacs
 https://github.com/Alexander-Miller/treemacs
 File / Projectbrowser, can look into files and everything!
-This section contains all the configurable parameters. 
+This section contains all the configurable parameters.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package treemacs
   :ensure t
@@ -662,7 +652,7 @@ The nifty file browser and interface enhancer
 #+END_SRC
 ** Dashboard
 https://github.com/emacs-dashboard/emacs-dashboard
-A custom start page if nothing else is wanted. 
+A custom start page if nothing else is wanted.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package dashboard
     :ensure t
@@ -682,7 +672,7 @@ A custom start page if nothing else is wanted.
 
 ** YaSnippets
 https://github.com/joaotavora/yasnippet
-YaSnippet so you easy can use mnemonics for inserting snippets of code a lots more. 
+YaSnippet so you easy can use mnemonics for inserting snippets of code a lots more.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package yasnippet
     :ensure t
@@ -714,7 +704,7 @@ $0 # Cursor goes here
     :hook
     (python-mode . lsp-mode)
     (python-mode . ruff-format-on-save-mode)
-    (python-mode . display-fill-column-indicator-mode) 
+    (python-mode . display-fill-column-indicator-mode)
    )
 
   (use-package pyvenv
@@ -733,7 +723,7 @@ $0 # Cursor goes here
   (add-hook 'python-mode-hook
             (lambda ()
               (set-fill-column 79)
-   
+
               )
             )
 #+END_SRC
@@ -780,10 +770,10 @@ We would also like to use conf-mode on some system config files like systemd fil
 #+END_SRC
 
 ** Extras
-The extras of the config file! 
+The extras of the config file!
 *** CHAT GPT shell
 https://github.com/xenodium/chatgpt-shell
-Use chat-gpt straight in Emacs, or even a local AI model. 
+Use chat-gpt straight in Emacs, or even a local AI model.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package chatgpt-shell
     :ensure t
@@ -791,7 +781,7 @@ Use chat-gpt straight in Emacs, or even a local AI model.
 
 #+END_SRC
 ** Unused
-Unused packages or packages not yet configures that are commented out and not in use. 
+Unused packages or packages not yet configures that are commented out and not in use.
 *** COMMENT Eglot
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package eglot
@@ -821,25 +811,6 @@ Unused packages or packages not yet configures that are commented out and not in
     :bind-keymap ("C-c p" . projectile-command-map)
     )
 #+END_SRC
-*** COMMENT asdvas
-And org-superstar
-https://github.com/integral-dw/org-superstar-mode
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package org-superstar
-    :ensure t
-    :config
-    (setq org-superstar-special-todo-items t) ;; Makes TODO header bullets into boxes
-    (setq org-superstar-todo-bullet-alist '(("TODO" . 9744)
-                                            ("DONE" . 9744)
-                                            ("READ" . 9744)
-                                            ("IDEA" . 9744)
-                                            ("WAITING" . 9744)
-                                            ("CANCELLED" . 9744)
-                                            ("PROJECT" . 9744)
-                                            ("POSTPONED" . 9744)))
-    )
-#+END_SRC
 ** Notes
 Links and articles about elisp/emacs and other packages I found interesting:
-
 - https://sophiebos.io/posts/beautifying-emacs-org-mode/
