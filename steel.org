@@ -452,6 +452,7 @@ The interface for autocomplete and a lot more.
     (setq company-minimum-prefix-length 0)
     (setq company-tooltip-offset-display 'lines)
     (setq company-tooltip-flip-when-above t)
+    (setq company-insertion-on-trigger nil)
     (define-key company-active-map (kbd "\C-n") 'company-select-next)
     (define-key company-active-map (kbd "\C-p") 'company-select-previous)
     (define-key company-active-map (kbd "\C-d") 'company-show-doc-buffer)

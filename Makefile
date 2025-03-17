@@ -10,6 +10,7 @@ export INIT_BODY
 build:
 	rm -f steel.el
 	rm -f init.el
+	rm -f .last-package-update-day
 	@echo "$$INIT_BODY" > init.el
 	mkdir -p .install-flags/
 	emacs --script init.el
