@@ -214,6 +214,13 @@ Installs an array of different themes.
              :apply t :spaceline t))
 
 #+END_SRC
+
+Set background opacity
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (set-frame-parameter (selected-frame) 'alpha '(97 . 100))
+  (add-to-list 'default-frame-alist '(alpha . (95 . 95)))
+#+END_SRC
+
 ** Doom-modeline
 https://github.com/seagle0128/doom-modeline
 Installs the doom-modeline
@@ -302,8 +309,6 @@ The menubar has to go! Bye!
 #+BEGIN_SRC emacs-lisp :tangle yes
  (windmove-default-keybindings)
 #+END_SRC
-
-
 ** Org-mode
 https://orgmode.org/
 The main reason for Emacs? The purpose of life?
@@ -378,13 +383,13 @@ https://github.com/minad/org-modern
     :config
     (setq org-startup-folded t
           org-auto-align-tags t
-          org-pretty-entities t
+          org-pretty-entities nil
           org-tags-column 0
           org-fold-catch-invisible-edits 'show-and-error
           org-special-ctrl-a/e t
           org-insert-heading-respect-content t
           ;; Don't style the following
-          org-modern-tag t
+          org-modern-tag nil
           org-modern-priority nil
           org-modern-todo t
           org-modern-table t
@@ -622,11 +627,6 @@ The nifty file browser and interface enhancer
     (helm-autoresize-mode t)
     )
 
-  (use-package helm-posframe
-    :ensure t
-    :config (helm-posframe-enable)
-    )
-
   (use-package helm-mode
     :config (helm-mode 1))
 
@@ -646,11 +646,11 @@ The nifty file browser and interface enhancer
     :bind (("M-s o" . helm-occur)))
 
   (use-package helm-imenu
-      :bind (("M-s i" . helm-imenu))
-      :config (setq imenu-max-item-length 120))
+    :bind (("M-s i" . helm-imenu))
+    :config (setq imenu-max-item-length 120))
 
   (use-package helm-bookmarks
-      :bind (("M-s b" . helm-bookmarks)))
+    :bind (("M-s b" . helm-bookmarks)))
 
   (add-to-list 'helm-completion-styles-alist '(python-mode . (emacs helm helm-flex)))
 
@@ -659,7 +659,17 @@ The nifty file browser and interface enhancer
         helm-use-undecorated-frame-option t
         helm-display-buffer-width 110
         )
+
+  (use-package helm-posframe
+    :ensure t
+    :config
+    (setq
+     helm-posframe-width 140
+     )
+    )
+  (helm-posframe-enable)
 #+END_SRC
+
 ** Dashboard
 https://github.com/emacs-dashboard/emacs-dashboard
 A custom start page if nothing else is wanted.
