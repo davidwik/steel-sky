@@ -298,6 +298,12 @@ The menubar has to go! Bye!
   ;; No scrollbars!
   (scroll-bar-mode -1)
 #+END_SRC
+** Windmov
+#+BEGIN_SRC emacs-lisp :tangle yes
+ (windmove-default-keybindings)
+#+END_SRC
+
+
 ** Org-mode
 https://orgmode.org/
 The main reason for Emacs? The purpose of life?
@@ -616,6 +622,10 @@ The nifty file browser and interface enhancer
     (helm-autoresize-mode t)
     )
 
+  (use-package helm-posframe
+    :ensure t
+    :config (helm-posframe-enable)
+    )
 
   (use-package helm-mode
     :config (helm-mode 1))
