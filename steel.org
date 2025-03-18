@@ -309,6 +309,14 @@ The menubar has to go! Bye!
 #+BEGIN_SRC emacs-lisp :tangle yes
  (windmove-default-keybindings)
 #+END_SRC
+** Winner
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package winner
+    :ensure nil
+    :config (winner-mode t)
+    )
+#+END_SRC
+
 ** Org-mode
 https://orgmode.org/
 The main reason for Emacs? The purpose of life?
@@ -831,6 +839,15 @@ Unused packages or packages not yet configures that are commented out and not in
     :bind-keymap ("C-c p" . projectile-command-map)
     )
 #+END_SRC
+*** COMMENT Golden-Ratio
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package golden-ratio
+    :ensure t
+    :config
+    (setq golden-ratio-auto-scale t)
+    )
+#+END_SRC
+
 ** Notes
 Links and articles about elisp/emacs and other packages I found interesting:
 - https://sophiebos.io/posts/beautifying-emacs-org-mode/
