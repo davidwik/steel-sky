@@ -297,6 +297,13 @@ Coding with line numbers is a joy and a priviledge!
   ;; Alternatively, to use it only in programming modes:
   (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 #+END_SRC
+** Column mode
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package column-number
+    :ensure nil
+    :hook (after-init . column-number-mode)
+    )
+#+END_SRC
 ** Get rid off menu bar and Scrollbars and set
 The menubar has to go! Bye!
 #+BEGIN_SRC emacs-lisp :tangle yes
