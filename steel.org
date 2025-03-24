@@ -1,12 +1,65 @@
 * Steel Sky Config
-** Heading
+** Introduction
+The Steel Sky org file generates my favorite emacs config.
+The configuration is arranged with different sections as headings. <tab> to expand.
+
+The goal is to have one emacs config that will make my life as a developer easier.
+
+To disable a feature you can hit `M-;`  to comment out a section.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
-  ;;; Steel sky config
-  ;;; If this file has an .el ending it is generated from steel.org
-  ;;; please edit that file instead.  Otherwise you are in the
-  ;;; right place =)
+  ;;; Steel sky config -- steel.el
+  ;;; This file has been generated from steel.org
+  ;;; please edit that file instead.
+
+  #+END_SRC
+** Package management
+This section sets up the repositories elpa and melpa. As well as package.el which will manage installation of all the other different packages.
+*** Initialize repositories and package.el
+https://github.com/jwiegley/use-package
+Most of the setup is using package.el for installation of elisp packages. But first the repositories needs to be defined.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (require 'package)
+
+
+  ;; Adds the repositories
+  (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
+                           ("melpa" . "https://melpa.org/packages/")))
+
+  (defvar custom/packages '(use-package
+                             )
+    "A list of packages to ensure are installed at launch.")
+
+  (defun custom/packages-installed-p ()
+    (cl-loop for pkg in custom/packages
+             when (not (package-installed-p pkg)) do (cl-return nil)
+             finally (cl-return t)))
+
+  (unless (custom/packages-installed-p)
+    (when (not package-archive-contents)
+      (message "%s" "Refreshing package database...")
+      (package-refresh-contents)
+      (dolist (pkg custom/packages)
+        (when (not (package-installed-p pkg))
+          (package-install pkg)))))
+  (provide 'custom/packages)
+  #+END_SRC
+*** Auto upgrade packages
+https://github.com/rranelli/auto-package-update.el
+Automatically keeps all the Emacs packages fresh!
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package auto-package-update
+    :ensure t
+    :config
+    (setq auto-package-update-delete-old-versions t
+          auto-package-update-interval 5)
+    (auto-package-update-maybe)
+    )
 #+END_SRC
-** Put temp-savefiles somewhere else, not polluting the working directory
+** General editor configuration
+*** Put temp-savefiles somewhere else, not polluting the working directory
 #+BEGIN_SRC emacs-lisp :tangle yes
   (setq make-backup-files nil) ; stop creating those backup~ files
   (setq auto-save-default nil) ; stop creating those #autosave# files
@@ -19,7 +72,6 @@
      kept-old-versions 2
      version-control t)       ; use versioned backups
 #+END_SRC
-** General functionality
 *** Save minibuffer history such as commands etc.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (savehist-mode t)
@@ -30,7 +82,7 @@
   ;; Dismiss native compilation warnings to pop up everywhere.
   (setq native-comp-async-report-warnings-errors 'silent)
 #+END_SRC
-** Identation
+*** Identation
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; Defining indentation
   (setq european-calendar-style 't)  ; European style calendar
@@ -71,50 +123,60 @@
               )
             )
 #+END_SRC
-** Install required packages
-https://github.com/jwiegley/use-package
-Most of the setup is using package.el for installation of elisp packages. But first the repositories needs to be defined.
-
+** Editor features
+*** Multi-cursors
+https://github.com/magnars/multiple-cursors.el
+"Because sometimes one cursor ain't enough" - Stephen Hawking (or an impersonator)
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (require 'package)
-  ;; register a upgrade package handler
-
-  ;; Adds the repositories
-  (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-                           ("melpa" . "https://melpa.org/packages/")))
-
-  (defvar custom/packages '(use-package
-                             )
-    "A list of packages to ensure are installed at launch.")
-
-  (defun custom/packages-installed-p ()
-    (cl-loop for pkg in custom/packages
-             when (not (package-installed-p pkg)) do (cl-return nil)
-             finally (cl-return t)))
-
-  (unless (custom/packages-installed-p)
-    (when (not package-archive-contents)
-      (message "%s" "Refreshing package database...")
-      (package-refresh-contents)
-      (dolist (pkg custom/packages)
-        (when (not (package-installed-p pkg))
-          (package-install pkg)))))
-  (provide 'custom/packages)
-  #+END_SRC
-** Upgrade packages
-https://github.com/rranelli/auto-package-update.el
-Automatically keeps all the Emacs packages fresh!
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package auto-package-update
+  (use-package multiple-cursors
     :ensure t
     :config
-    (setq auto-package-update-delete-old-versions t
-          auto-package-update-interval 5)
-    (auto-package-update-maybe)
+    (progn
+      (global-set-key (kbd "C-<f1>") 'mc/edit-lines)
+      (global-set-key (kbd "C-<f2>") 'mc/insert-numbers)
+      (global-set-key (kbd "C-<f5>") 'my-mark-current-word)
+      (global-set-key (kbd "C-<f6>") 'mc/mark-next-like-this)
+      )
     )
 #+END_SRC
-** Icons and special fonts
+*** YaSnippets
+https://github.com/joaotavora/yasnippet
+YaSnippet so you easy can use mnemonics for inserting snippets of code a lots more.
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package yasnippet
+    :ensure t
+    :config
+    (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
+    (yas-global-mode 1)
+    )
+#+END_SRC
+
+
+Create a new snippet with M-x yas/new-snippet
+#+BEGIN_SRC
+# -*- mode: snippet -*-
+# name: Python generate class
+# key: <<pc
+# --
+
+# ${1:var_name} works like a form
+
+class ${1:class_name}(object):
+
+$0 # Cursor goes here
+#+END_SRC
+
+*** CHAT GPT shell
+https://github.com/xenodium/chatgpt-shell
+Use chat-gpt straight in Emacs, or even a local AI model.
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package chatgpt-shell
+    :ensure t
+    )
+
+#+END_SRC
+** Look and feel
+*** Icons and special fonts
 Checks whether my favorite font is installed otherwise it will copy it to the default,  user based font-dir.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (if(file-directory-p "~/.local/share/fonts")
@@ -160,7 +222,7 @@ https://github.com/rainstormstudio/nerd-icons.el
       (write-region "Installed\n" nil "~/.emacs.d/.install-flags/nerd-icons-fonts-installed.flag"))
     )
 #+END_SRC
-** Install theming
+*** Install theming
 Installs an array of different themes.
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; Cool themes,
@@ -221,7 +283,7 @@ Set background opacity
   (add-to-list 'default-frame-alist '(alpha . (95 . 95)))
 #+END_SRC
 
-** Doom-modeline
+*** Doom-modeline
 https://github.com/seagle0128/doom-modeline
 Installs the doom-modeline
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -232,7 +294,7 @@ Installs the doom-modeline
   (setq doom-modeline-height 40)
   (setq doom-modeline-time-analogue-clock nil)
 #+END_SRC
-*** Time
+**** Time
 Shows the time in 24hr format
 #+BEGIN_SRC emacs-lisp :tangle yes
   (setq display-time-24hr-format t)
@@ -240,27 +302,26 @@ Shows the time in 24hr format
   (setq display-time-mail-directory nil)
   (display-time-mode 1)
 #+END_SRC
-*** Battery
+**** Battery
 Show battery information if enabled
 #+BEGIN_SRC emacs-lisp :tangle yes
   (display-battery-mode t)
 #+END_SRC
-** Multi-cursors
-https://github.com/magnars/multiple-cursors.el
-"Because sometimes one cursor ain't enough" - Stephen Hawking (or an impersonator)
+
+*** Line numbers
+Coding with line numbers is a joy and a priviledge!
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package multiple-cursors
-    :ensure t
-    :config
-    (progn
-      (global-set-key (kbd "C-<f1>") 'mc/edit-lines)
-      (global-set-key (kbd "C-<f2>") 'mc/insert-numbers)
-      (global-set-key (kbd "C-<f5>") 'my-mark-current-word)
-      (global-set-key (kbd "C-<f6>") 'mc/mark-next-like-this)
-      )
+  ;; Alternatively, to use it only in programming modes:
+  (add-hook 'prog-mode-hook #'display-line-numbers-mode)
+#+END_SRC
+*** Column mode
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package column-number
+    :ensure nil
+    :hook (after-init . column-number-mode)
     )
 #+END_SRC
-** Hide buffers
+*** Hide buffers
 Get rid of *Messages* *Completions* while sometimes informative, mostly annoying. And bypassing
 the startup message, since we want to use the dashboard.
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -291,20 +352,7 @@ the startup message, since we want to use the dashboard.
 
   (setq inhibit-startup-message t)   ; Don't want any startup message
   #+END_SRC
-** Line numbers
-Coding with line numbers is a joy and a priviledge!
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; Alternatively, to use it only in programming modes:
-  (add-hook 'prog-mode-hook #'display-line-numbers-mode)
-#+END_SRC
-** Column mode
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package column-number
-    :ensure nil
-    :hook (after-init . column-number-mode)
-    )
-#+END_SRC
-** Get rid off menu bar and Scrollbars and set
+*** Get rid off menu bar and Scrollbars and set
 The menubar has to go! Bye!
 #+BEGIN_SRC emacs-lisp :tangle yes
   (menu-bar-mode -99)
@@ -312,11 +360,35 @@ The menubar has to go! Bye!
   ;; No scrollbars!
   (scroll-bar-mode -1)
 #+END_SRC
-** Windmov
+** Dashboard
+https://github.com/emacs-dashboard/emacs-dashboard
+A custom start page if nothing else is wanted.
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package dashboard
+    :ensure t
+    :init (progn
+            (dashboard-setup-startup-hook)
+            (setq dashboard-banner-logo-title "Steel sky 0.2.7")
+            (setq dashboard-startup-banner "~/.emacs.d/img/logo-medium.png")
+            (setq dashboard-items '((recents  . 20)))
+            (setq dashboard-init-info "\"Steel sky\" a flavour of emacs with a hint of fresh blue skies, coffee and rusty steel.")
+            (setq dashboard-footer-messages '("Keep up the good work!"))
+            (if (< (length command-line-args) 2)
+                (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+              )
+            )
+    )
+#+END_SRC
+
+** Window navigation
+Packages that are making navigation between different windows easier.
+*** Windmov
+A built-in feature that makes it easier to move around between diffent windows.
 #+BEGIN_SRC emacs-lisp :tangle yes
  (windmove-default-keybindings)
 #+END_SRC
-** Winner
+*** Winner
+It's easy to f*ck things up especially if you have a nice window layout. That's why winner was invented and people rejoiced. Finally we are all winners.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package winner
     :ensure nil
@@ -324,16 +396,32 @@ The menubar has to go! Bye!
     )
 #+END_SRC
 
+*** Golden-Ratio
+https://github.com/roman/golden-ratio.el
+Golden ratio slightly enlarges an active window.
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package golden-ratio
+    :ensure t
+    :config
+    (setq golden-ratio-auto-scale t)
+    )
+#+END_SRC
+
 ** Org-mode
-https://orgmode.org/
-The main reason for Emacs? The purpose of life?
-org-mode is nowadays bundled with Emacs. But I also added some extra packages.
+*** Olivetti
+Puts org mode in center for better writing experience.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package olivetti
     :ensure t
     :init
     (setq olivetti-body-width 0.4)
     )
+#+END_SRC
+*** Org mode
+https://orgmode.org/
+The main reason for Emacs? The purpose of life?
+org-mode is nowadays bundled with Emacs. But I also added some extra packages.
+#+BEGIN_SRC emacs-lisp :tangle yes
 
   (use-package org
     :pin gnu
@@ -390,7 +478,7 @@ org-mode is nowadays bundled with Emacs. But I also added some extra packages.
     )
 #+END_SRC
 
-org-modern
+*** org-modern
 https://github.com/minad/org-modern
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package org-modern
@@ -425,19 +513,8 @@ https://github.com/minad/org-modern
     (global-org-modern-mode)
     )
 #+END_SRC
-** Markdown mode
-https://jblevins.org/projects/markdown-mode/
-A lesser format than .org, but it's used everywhere
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package markdown-mode
-    :ensure t
-    :mode ("\\.md$'" . gfm-mode)
-    :init (setq markdown-command "multimarkdown"))
-  (use-package markdown-preview-eww
-    :ensure t
-    )
-#+END_SRC
-** Company mode
+** Linting, language servers and auto complete
+*** Company mode
 https://company-mode.github.io/
 The interface for autocomplete and a lot more.
 
@@ -457,7 +534,7 @@ The interface for autocomplete and a lot more.
     (define-key company-active-map (kbd "M-.") 'company-show-location)
     )
 #+END_SRC
-** LSP mode and ruff
+*** LSP mode and ruff
 https://github.com/emacs-lsp/lsp-mode
 Support for language servers, such as pyright and ruff (only linting)
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -494,20 +571,26 @@ Support for language servers, such as pyright and ruff (only linting)
     :ensure t
     )
 #+END_SRC
-** FlyCheck
+*** FlyCheck
 https://www.flycheck.org/en/latest/
 A detailed linter frontend.
 #+BEGIN_SRC emacs-lisp :tangle yes
-   (use-package flycheck
-     :ensure t
-     :init (global-flycheck-mode)
-     :config
-      '(flycheck-check-syntax-automatically (quote
-                                             (save idle-change mode-enabled)))
-      '(flycheck-idle-change-delay 8) ;; Set delay based on what suits you the best
+  (use-package flycheck
+    :ensure t
+    :init (global-flycheck-mode)
+    :config
+    (setq
+     flycheck-display-errors-delay 10
+     flycheck-auto-display-errors-after-checking nil
      )
+    ;; '(flycheck-check-syntax-automatically (quote
+    ;;                                        (save idle-change mode-enabled)))
+    ;; '(flycheck-idle-change-delay 8) ;; Set delay based on what suits you the best
+    ;; )
+    )
     #+END_SRC
-** Treemacs
+** File system navigation
+*** Treemacs
 https://github.com/Alexander-Miller/treemacs
 File / Projectbrowser, can look into files and everything!
 This section contains all the configurable parameters.
@@ -629,7 +712,8 @@ This section contains all the configurable parameters.
     :ensure t
     :config (treemacs-set-scope-type 'Tabs))
 #+END_SRC
-** Helm
+
+*** Helm
 https://emacs-helm.github.io/helm/
 The nifty file browser and interface enhancer
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -694,55 +778,8 @@ The nifty file browser and interface enhancer
   (helm-posframe-enable)
 #+END_SRC
 
-** Dashboard
-https://github.com/emacs-dashboard/emacs-dashboard
-A custom start page if nothing else is wanted.
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package dashboard
-    :ensure t
-    :init (progn
-            (dashboard-setup-startup-hook)
-            (setq dashboard-banner-logo-title "Steel sky 0.2.7")
-            (setq dashboard-startup-banner "~/.emacs.d/img/logo-medium.png")
-            (setq dashboard-items '((recents  . 20)))
-            (setq dashboard-init-info "\"Steel sky\" a flavour of emacs with a hint of fresh blue skies, coffee and rusty steel.")
-            (setq dashboard-footer-messages '("Keep up the good work!"))
-            (if (< (length command-line-args) 2)
-                (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
-              )
-            )
-    )
-#+END_SRC
-
-** YaSnippets
-https://github.com/joaotavora/yasnippet
-YaSnippet so you easy can use mnemonics for inserting snippets of code a lots more.
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package yasnippet
-    :ensure t
-    :config
-    (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
-    (yas-global-mode 1)
-    )
-#+END_SRC
-
-
-Create a new snippet with M-x yas/new-snippet
-#+BEGIN_SRC
-# -*- mode: snippet -*-
-# name: Python generate class
-# key: <<pc
-# --
-
-# ${1:var_name} works like a form
-
-class ${1:class_name}(object):
-
-$0 # Cursor goes here
-#+END_SRC
-
 ** Languages and formats
-*** Python stuff
+*** Python mode
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package python
     :hook
@@ -796,7 +833,7 @@ Rudimentary Rust support
 
 *** Web Mode
 https://web-mode.org/
-\What a beast of a mode supports HTML, CSS, Javascript!
+What a beast of a mode! Supports HTML, CSS, Javascript!
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package web-mode
     :ensure t
@@ -812,21 +849,22 @@ We would also like to use conf-mode on some system config files like systemd fil
            )
     )
 #+END_SRC
-
-** Extras
-The extras of the config file!
-*** CHAT GPT shell
-https://github.com/xenodium/chatgpt-shell
-Use chat-gpt straight in Emacs, or even a local AI model.
+*** Markdown mode
+https://jblevins.org/projects/markdown-mode/
+A lesser format than .org, but it's used everywhere
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package chatgpt-shell
+  (use-package markdown-mode
+    :ensure t
+    :mode ("\\.md$'" . gfm-mode)
+    :init (setq markdown-command "multimarkdown"))
+  (use-package markdown-preview-eww
     :ensure t
     )
-
 #+END_SRC
 ** Unused
-Unused packages or packages not yet configures that are commented out and not in use.
+Packages that are not active for different reasons. Could be buggy or just not needed at the moment. But placed here to be served as a reminder of their existence.
 *** COMMENT Eglot
+I had a hard time getting Eglot to work nicely. Even though it should be more effecient.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package eglot
     :ensure t
@@ -847,6 +885,7 @@ Unused packages or packages not yet configures that are commented out and not in
     )
 #+END_SRC
 *** COMMENT Projectile
+I had projectile installed in the past. But I'm wondering if it is needed?
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package projectile
     :ensure t
@@ -855,15 +894,6 @@ Unused packages or packages not yet configures that are commented out and not in
     :bind-keymap ("C-c p" . projectile-command-map)
     )
 #+END_SRC
-*** COMMENT Golden-Ratio
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package golden-ratio
-    :ensure t
-    :config
-    (setq golden-ratio-auto-scale t)
-    )
-#+END_SRC
-
-** Notes
-Links and articles about elisp/emacs and other packages I found interesting:
-- https://sophiebos.io/posts/beautifying-emacs-org-mode/
+** Wishlist - To add/fix
+- Fix the annoying lint messages in the Python buffer
+- Make rust mode a great experience, with linting and auto-complete.
