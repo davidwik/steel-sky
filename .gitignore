@@ -23,3 +23,6 @@ url/
 .chatgpt-shell.el
 projects
 .last-package-update-day
+org-roam.db
+.org-id-locations
+bookmarks

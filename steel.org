@@ -13,6 +13,16 @@ To disable a feature you can hit `M-;`  to comment out a section.
   ;;; please edit that file instead.
 
   #+END_SRC
+
+** Variables to set
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; Directory where you store your org files
+  (defvar steel-org-dir "~/org-files")
+  ;; Preferred font for coding
+  (defvar steel-code-font "Envy Code R")
+
+#+END_SRC
+
 ** Package management
 This section sets up the repositories elpa and melpa. As well as package.el which will manage installation of all the other different packages.
 *** Initialize repositories and package.el
@@ -45,6 +55,7 @@ Most of the setup is using package.el for installation of elisp packages. But fi
           (package-install pkg)))))
   (provide 'custom/packages)
   #+END_SRC
+
 *** Auto upgrade packages
 https://github.com/rranelli/auto-package-update.el
 Automatically keeps all the Emacs packages fresh!
@@ -166,6 +177,14 @@ class ${1:class_name}(object):
 $0 # Cursor goes here
 #+END_SRC
 
+*** Move text
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package move-text
+    :ensure t
+    :config
+    (move-text-default-bindings)
+    )
+#+END_SRC
 *** CHAT GPT shell
 https://github.com/xenodium/chatgpt-shell
 Use chat-gpt straight in Emacs, or even a local AI model.
@@ -243,8 +262,6 @@ Installs an array of different themes.
   (use-package birds-of-paradise-plus-theme
     :ensure t
     )
-
-
   (use-package ewal
     :ensure t
     :init (setq ewal-use-built-in-always-p nil
@@ -256,7 +273,7 @@ Installs an array of different themes.
     :init (progn
             (setq spacemacs-theme-underline-parens t
                   my:rice:font (font-spec
-                                :family "Envy Code R"
+                                :family steel-code-font
                                 :weight 'semi-bold
                                 :size 11.0))
             (show-paren-mode +1)
@@ -407,112 +424,6 @@ Golden ratio slightly enlarges an active window.
     )
 #+END_SRC
 
-** Org-mode
-*** Olivetti
-Puts org mode in center for better writing experience.
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package olivetti
-    :ensure t
-    :init
-    (setq olivetti-body-width 0.4)
-    )
-#+END_SRC
-*** Org mode
-https://orgmode.org/
-The main reason for Emacs? The purpose of life?
-org-mode is nowadays bundled with Emacs. But I also added some extra packages.
-#+BEGIN_SRC emacs-lisp :tangle yes
-
-  (use-package org
-    :pin gnu
-    :mode (("\\.org$" . org-mode))
-    :hook
-    (org-mode . olivetti-mode)
-    (org-mode . visual-line-mode)
-    ;; (org-mode . org-indent-mode)
-    (org-mode . variable-pitch-mode)
-    :config
-    (progn
-      ;;(add-hook 'org-mode-hook #'org-modern-mode)
-      (setq org-hide-leading-stars nil
-            )
-      (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
-      ;; Resize Org headings
-      (dolist (face '((org-level-1 . 1.8)
-                      (org-level-2 . 1.4)
-                      (org-level-3 . 1.2)
-                      (org-level-4 . 1.0)
-                      (org-level-5 . 1.0)
-                      (org-level-6 . 1.0)
-                      (org-level-7 . 1.0)
-                      (org-level-8 . 1.0)))
-        (set-face-attribute (car face) nil
-                            :font "Envy Code R"
-                            :weight 'bold
-                            :height (cdr face))
-        )
-      (set-face-attribute 'org-block t
-                          :inherit 'fixed-pitch
-                          :height 0.8)
-      (set-face-attribute 'org-code nil
-                          :inherit '(shadow fixed-pitch)
-                          :height 0.85
-                          )
-      (set-face-attribute 'org-verbatim t
-                          :inherit '(shadow fixed-pitch)
-                          :height 0.85
-                          )
-      (set-face-attribute 'org-special-keyword nil
-                          :inherit '(font-lock-comment-face fixed-pitch))
-      (set-face-attribute 'org-meta-line t
-                          :inherit '(font-lock-comment-face fixed-pitch))
-      (set-face-attribute 'org-checkbox t
-                          :inherit 'fixed-pitch)
-
-      ;; Make the document title a bit bigger
-      (set-face-attribute 'org-document-title t
-                          :font "Envy Code R" :weight
-                          'bold :height 3
-                          )
-      )
-    )
-#+END_SRC
-
-*** org-modern
-https://github.com/minad/org-modern
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package org-modern
-    :ensure t
-    :config
-    (setq org-startup-folded t
-          org-auto-align-tags t
-          org-pretty-entities nil
-          org-tags-column 0
-          org-fold-catch-invisible-edits 'show-and-error
-          org-special-ctrl-a/e t
-          org-insert-heading-respect-content t
-          ;; Don't style the following
-          org-modern-tag nil
-          org-modern-priority nil
-          org-modern-todo t
-          org-modern-table t
-          org-modern-star 'replace
-          ;; org-modern-replace-stars t
-
-          org-modern-hide-stars t
-          org-ellipsis "…"
-          ;; Agenda styling
-          org-agenda-tags-column 0
-          org-agenda-block-separator ?─
-          org-agenda-time-grid
-          '((daily today require-timed)
-            (800 1000 1200 1400 1600 1800 2000)
-            " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
-          org-agenda-current-time-string
-          "⭠ now ─────────────────────────────────────────────────")
-    (global-org-modern-mode)
-    )
-#+END_SRC
 ** Linting, language servers and auto complete
 *** Company mode
 https://company-mode.github.io/
@@ -523,11 +434,14 @@ The interface for autocomplete and a lot more.
     :ensure t
     :config
     (global-company-mode t)
-    (setq company-idle-delay 0.5)
-    (setq company-minimum-prefix-length 0)
-    (setq company-tooltip-offset-display 'lines)
-    (setq company-tooltip-flip-when-above t)
-    (setq company-insertion-on-trigger nil)
+    (setq
+     company-idle-delay 0.5
+     company-minimum-prefix-length 0
+     company-tooltip-offset-display 'lines
+     company-tooltip-flip-when-above t
+     company-insertion-on-trigger nil
+     )
+
     (define-key company-active-map (kbd "\C-n") 'company-select-next)
     (define-key company-active-map (kbd "\C-p") 'company-select-previous)
     (define-key company-active-map (kbd "\C-d") 'company-show-doc-buffer)
@@ -589,6 +503,135 @@ A detailed linter frontend.
     ;; )
     )
     #+END_SRC
+** Org-mode
+*** Olivetti
+Puts org mode in center for better writing experience.
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package olivetti
+    :ensure t
+    :init
+    (setq olivetti-body-width 0.4)
+    )
+#+END_SRC
+*** Org mode
+https://orgmode.org/
+The main reason for Emacs? The purpose of life?
+org-mode is nowadays bundled with Emacs. But I also added some extra packages.
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package org
+      :pin gnu
+      :mode (("\\.org$" . org-mode))
+      :hook
+      (org-mode . olivetti-mode)
+      (org-mode . visual-line-mode)
+      ;; (org-mode . org-indent-mode)
+      (org-mode . variable-pitch-mode)
+      :config
+      (progn
+        ;;(add-hook 'org-mode-hook #'org-modern-mode)
+        (setq org-hide-leading-stars nil
+              )
+        (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
+        ;; Resize Org headings
+        (dolist (face '((org-level-1 . 1.8)
+                        (org-level-2 . 1.4)
+                        (org-level-3 . 1.2)
+                        (org-level-4 . 1.0)
+                        (org-level-5 . 1.0)
+                        (org-level-6 . 1.0)
+                        (org-level-7 . 1.0)
+                        (org-level-8 . 1.0)))
+          (set-face-attribute (car face) nil
+                              :font "Envy Code R"
+                              :weight 'bold
+                              :height (cdr face))
+          )
+        (set-face-attribute 'org-block t
+                            :inherit 'fixed-pitch
+                            :height 0.8)
+        (set-face-attribute 'org-code nil
+                            :inherit '(shadow fixed-pitch)
+                            :height 0.85
+                            )
+        (set-face-attribute 'org-verbatim t
+                            :inherit '(shadow fixed-pitch)
+                            :height 0.85
+                            )
+        (set-face-attribute 'org-special-keyword nil
+                            :inherit '(font-lock-comment-face fixed-pitch))
+        (set-face-attribute 'org-meta-line t
+                            :inherit '(font-lock-comment-face fixed-pitch))
+        (set-face-attribute 'org-checkbox t
+                            :inherit 'fixed-pitch)
+
+        ;; Make the document title a bit bigger
+        (set-face-attribute 'org-document-title t
+                            :font "Envy Code R" :weight
+                            'bold :height 3
+                            )
+        )
+      )
+#+END_SRC
+*** org-modern
+https://github.com/minad/org-modern
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package org-modern
+    :ensure t
+    :config
+    (setq org-startup-folded t
+          org-auto-align-tags t
+          org-pretty-entities nil
+          org-tags-column 0
+          org-fold-catch-invisible-edits 'show-and-error
+          org-special-ctrl-a/e t
+          org-insert-heading-respect-content t
+          ;; Don't style the following
+          org-modern-tag nil
+          org-modern-priority nil
+          org-modern-todo t
+          org-modern-table t
+          org-modern-star 'replace
+          ;; org-modern-replace-stars t
+
+          org-modern-hide-stars t
+          org-ellipsis "…"
+          ;; Agenda styling
+          org-agenda-tags-column 0
+          org-agenda-block-separator ?─
+          org-agenda-time-grid
+          '((daily today require-timed)
+            (800 1000 1200 1400 1600 1800 2000)
+            " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+          org-agenda-current-time-string
+          "⭠ now ─────────────────────────────────────────────────")
+    (global-org-modern-mode)
+    )
+#+END_SRC
+*** org-roam
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package org-roam
+    :ensure t
+    :init (progn
+            (if(file-directory-p steel-org-dir)
+                (message "org directory already exists.")
+              (make-directory steel-org-dir)
+              )
+            )
+    :custom
+    (org-roam-directory steel-org-dir)
+    (org-roam-completion-everywhere t)
+    :bind (
+           ("C-c n l" . org-roam-buffer-toggle)
+           ("C-c n f" . org-roam-node-find)
+           ("C-c n i" . org-roam-node-insert)
+           :map org-mode-map
+           ("C-M-i" . completion-at-point)
+           )
+    :config
+    (org-roam-setup)
+    )
+  (add-to-list 'completion-at-point-functions #'org-roam-complete-link-at-point)
+#+END_SRC
 ** File system navigation
 *** Treemacs
 https://github.com/Alexander-Miller/treemacs
