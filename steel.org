@@ -3,7 +3,7 @@
 The Steel Sky org file generates my favorite emacs config.
 The configuration is arranged with different sections as headings. <tab> to expand.
 
-The goal is to have one emacs config that will make my life as a developer easier.
+The goal is to have one emacs config that will make my life as a developer, parent, love and friend easier.
 
 To disable a feature you can hit `M-;`  to comment out a section.
 
@@ -15,28 +15,40 @@ To disable a feature you can hit `M-;`  to comment out a section.
   #+END_SRC
 
 * Variables for you to set!
+
+Here is your oppurtunity to style some quick settings. The directory is
+
 #+BEGIN_SRC emacs-lisp :tangle yes
-  ;; Set theme
-    (defvar steel-theme 'doom-city-lights)
-  ;; Directory where you store your org files
-  (defvar steel-org-dir "~/org-files")
 
-    ;; Preferred font for coding
-    (defvar steel-code-font "Envy Code R")
+  ;; Set theme, there are loads which you can load via. M-x load-theme.
+  ;; Remember the name and you can use it as default by changing this value.
+  (defvar steel-theme 'doom-city-lights)
 
-    ;; Org style font
-    (defvar steel-org-font "Roboto")
+  ;; Directory where you store your org-files. This is thought to be used
+  ;; with org-roam. Which links different org-file like a hive-mind :O
+  (defvar steel-org-dir "~/org-sphere")
 
-    ;; The local user's font directory
-    (defvar steel-font-dir "~/.local/share/fonts")
+  ;; Preferred font for coding. There are many out there, this is mine.
+  (defvar steel-code-font "Envy Code R")
 
-    ;; Opacity value 100 is fully opaque.
-    (defvar steel-opacity 97)
+  ;; Org style font.
+  (defvar steel-org-font "Roboto")
+
+  ;; The local user's font directory. This works for debian'ish distros.
+  (defvar steel-font-dir "~/.local/share/fonts")
+
+  ;; Opacity value 100 is fully opaque.
+  (defvar steel-opacity 97)
+
 #+END_SRC
+
 * Package management
+
 This section sets up the repositories elpa and melpa. As well as package.el which will manage installation of all the other different packages.
+
 ** Initialize repositories and package.el
 https://github.com/jwiegley/use-package
+
 Most of the setup is using package.el for installation of elisp packages. But first the repositories needs to be defined.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -64,10 +76,12 @@ Most of the setup is using package.el for installation of elisp packages. But fi
         (when (not (package-installed-p pkg))
           (package-install pkg)))))
   (provide 'custom/packages)
+
   #+END_SRC
 
 ** Auto upgrade packages
 https://github.com/rranelli/auto-package-update.el
+
 Automatically keeps all the Emacs packages fresh!
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -81,6 +95,7 @@ Automatically keeps all the Emacs packages fresh!
 #+END_SRC
 * General editor configuration
 ** Put temp-savefiles somewhere else, not polluting the working directory
+Many people is
 #+BEGIN_SRC emacs-lisp :tangle yes
   (setq make-backup-files nil) ; stop creating those backup~ files
   (setq auto-save-default nil) ; stop creating those #autosave# files
@@ -146,14 +161,13 @@ Automatically keeps all the Emacs packages fresh!
 #+END_SRC
 ** Hot keys
 #+BEGIN_SRC emacs-lisp :tangle yes
-  ;; Press CTRL-ALT-r to restart emacs 
+  ;; Press CTRL-ALT-r to restart emacs
   (global-set-key (kbd "C-M-r") 'restart-emacs)
 #+END_SRC
 
 * Editor features
 ** Multi-cursors
 https://github.com/magnars/multiple-cursors.el
-
 "Because sometimes one cursor ain't enough" - Stephen Hawking (or an impersonator)
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -242,7 +256,7 @@ Checks whether my favorite font is installed otherwise it will copy it to the de
           t)))
     )
   ;; Make a list, loop it through and install the fonts
-  ;; that are missing. 
+  ;; that are missing.
   (let ((fonts-to-install
          '(
           "roboto.ttf"
@@ -447,10 +461,19 @@ A custom start page if nothing else is wanted.
 
 * Window navigation
 Packages that are making navigation between different windows easier.
-** Windmov
+** Windmove
 A built-in feature that makes it easier to move around between diffent windows.
 #+BEGIN_SRC emacs-lisp :tangle yes
- (windmove-default-keybindings)
+  (use-package windmove
+    :ensure nil
+    :bind*
+    (("C-s-<left>" . windmove-left)
+     ("C-s-<right>" . windmove-right)
+     ("C-s-<up>" . windmove-up)
+     ("C-s-<down>" . windmove-down)
+     ;;(windmove-default-keybindings)
+     )
+    )
 #+END_SRC
 ** Winner
 It's easy to f*ck things up especially if you have a nice window layout. That's why winner was invented and people rejoiced. Finally we are all winners.
@@ -561,6 +584,7 @@ Puts org mode in center for better writing experience.
     (setq olivetti-body-width 0.4)
     )
 #+END_SRC
+
 ** Org mode
 
 https://orgmode.org/
@@ -575,7 +599,7 @@ org-mode is nowadays bundled with Emacs. But I also added some extra packages.
     :hook
     (org-mode . olivetti-mode)
     (org-mode . visual-line-mode)
-   ;; (org-mode . org-indent-mode)
+    (org-mode . org-indent-mode)
     (org-mode . variable-pitch-mode) ;; Font se
     :config
     ;;(add-hook 'org-mode-hook #'org-modern-mode)
@@ -585,7 +609,7 @@ org-mode is nowadays bundled with Emacs. But I also added some extra packages.
 
 
     (set-face-attribute 'variable-pitch nil :family "Roboto" :weight 'light :height 160)
-           
+
     (set-face-attribute 'fixed-pitch t
                         :font steel-org-font
                         )
@@ -615,12 +639,12 @@ org-mode is nowadays bundled with Emacs. But I also added some extra packages.
                           ;;:weight 'bold
                           :height (cdr face))
       )
-    
+
     (set-face-attribute 'org-block t
                         :font steel-org-font
                         :height 0.8)
 
-    
+
     (set-face-attribute 'org-code t
                          :inherit '(shadow fixed-pitch)
                          :height 1.2
@@ -636,7 +660,7 @@ org-mode is nowadays bundled with Emacs. But I also added some extra packages.
                         :inherit '(font-lock-comment-face fixed-pitch))
     (set-face-attribute 'org-checkbox t
                         :inherit 'fixed-pitch)
-    
+
     ;; Make the document title a bit bigger
     (set-face-attribute 'org-document-title nil
                         :font steel-org-font
@@ -645,15 +669,28 @@ org-mode is nowadays bundled with Emacs. But I also added some extra packages.
                         )
     )
 #+END_SRC
+** Todo setup
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq org-agenda-files (directory-files-recursively steel-org-dir "\\.org$"))
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "|" "DONE(d)")
+          (sequence "REPORT(r)" "BUG(b)" "NEEDINFO(i)" "WAITING(w)" "KNOWNCAUSE(k)" "|" "FIXED(f)")))
+
+#+END_SRC
+
 ** org-modern
 https://github.com/minad/org-modern
+
+Some cosmetic improvements of org-mode. Like bullet-points and a more neater src block.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package org-modern
     :ensure t
     :config
     (setq org-startup-folded t
           org-auto-align-tags t
-          org-pretty-entities t
+          org-pretty-entities nil
           org-tags-column 0
           org-fold-catch-invisible-edits 'show-and-error
           org-special-ctrl-a/e t
@@ -679,7 +716,10 @@ https://github.com/minad/org-modern
     (global-org-modern-mode)
     )
 #+END_SRC
+
 ** org-roam
+Org-roam is supposed to be like a extended mind of org-documents. Not tested fully yet.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package org-roam
     :ensure t
@@ -704,6 +744,7 @@ https://github.com/minad/org-modern
     )
   (add-to-list 'completion-at-point-functions #'org-roam-complete-link-at-point)
 #+END_SRC
+
 * File system navigation
 ** Treemacs
 https://github.com/Alexander-Miller/treemacs
@@ -1012,5 +1053,3 @@ I had projectile installed in the past. But I'm wondering if it is needed?
 * Wishlist - To add/fix
 - Fix the annoying lint messages in the Python buffer
 - Make rust mode a great experience, with linting and auto-complete.
-
-
