@@ -535,7 +535,7 @@ org-mode is nowadays bundled with Emacs. But I also added some extra packages.
       :config
       (progn
         ;;(add-hook 'org-mode-hook #'org-modern-mode)
-        (setq org-hide-leading-stars nil
+        (setq org-hide-leading-stars t
               )
         (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
         ;; Resize Org headings
@@ -597,9 +597,8 @@ https://github.com/minad/org-modern
           org-modern-todo t
           org-modern-table t
           org-modern-star 'replace
-          ;; org-modern-replace-stars t
-
-          org-modern-hide-stars t
+          ;;org-modern-replace-stars t
+          org-modern-hide-stars nil
           org-ellipsis "…"
           ;; Agenda styling
           org-agenda-tags-column 0
