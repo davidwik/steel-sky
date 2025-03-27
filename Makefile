@@ -26,7 +26,6 @@ clean:
                url             \
                chatgpt/        \
                games/          \
-               recentf         \
                .install-flags  \
                transient/      \
                .chatgpt-shell.el \
