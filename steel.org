@@ -201,24 +201,50 @@ Use chat-gpt straight in Emacs, or even a local AI model.
 
 #+END_SRC
 ** Look and feel
-*** Icons and special fonts
+*** Install fonts and font-icon pack
 Checks whether my favorite font is installed otherwise it will copy it to the default,  user based font-dir.
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (if(file-directory-p "~/.local/share/fonts")
+  (if(file-directory-p steel-font-dir)
       (message "Local font directory already exists.")
-    (make-directory "~/.local/share/fonts")
+    (make-directory steel-font-dir)
     )
 
-  (if(file-exists-p "~/.local/share/fonts/envy.ttf")
-      (progn
-        (message "Font already installed!")
+  (defun install-steel-font (font-filename)
+    "Install a font from the 'ttf/' directory in Emacs' user directory to steel-font-dir."
+    (let* ((src-file (expand-file-name (concat "ttf/" font-filename) user-emacs-directory))
+           (dst-file (expand-file-name font-filename steel-font-dir))) ;; Ensure absolute path
+      (message "Font: %s" font-filename)
+      (if (file-exists-p dst-file)
+          (progn
+            (message "Font already installed!")
+            nil)
+        (progn
+          (copy-file src-file dst-file nil)  ;; Copy only if not existing
+          (message "Font installed successfully!")
+          t)))
+    )
+  ;; Make a list, loop it through and install the fonts
+  ;; that are missing. 
+  (let ((fonts-to-install
+         '(
+          "roboto.ttf"
+          "roboto-italic.ttf"
+          "envy.ttf"
+          )))
+    (let ((new-files nil))
+      (dolist (ft fonts-to-install)
+        (progn
+          (if (install-steel-font ft)
+              (setq new-files t)
+            )
+          )
         )
-    (progn
-      (copy-file (expand-file-name "ttf/envy.ttf" user-emacs-directory)  "~/.local/share/fonts/" nil)
-      (shell-command "fc-cache -f -v" t)
+      (if new-files
+          (shell-command "fc-cache -f" nil)
+        )
       )
     )
-    #+END_SRC
+#+END_SRC
 
 All the icons
 https://github.com/domtronn/all-the-icons.el
@@ -539,7 +565,7 @@ org-mode is nowadays bundled with Emacs. But I also added some extra packages.
               )
         (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
         ;; Resize Org headings
-        (dolist (face '((org-level-1 . 1.8)
+        (dolist (face '((org-level-1 . 1.6)
                         (org-level-2 . 1.4)
                         (org-level-3 . 1.2)
                         (org-level-4 . 1.0)
@@ -548,7 +574,7 @@ org-mode is nowadays bundled with Emacs. But I also added some extra packages.
                         (org-level-7 . 1.0)
                         (org-level-8 . 1.0)))
           (set-face-attribute (car face) nil
-                              :font "Envy Code R"
+                              :font steel-code-font
                               :weight 'bold
                               :height (cdr face))
           )
@@ -572,8 +598,8 @@ org-mode is nowadays bundled with Emacs. But I also added some extra packages.
 
         ;; Make the document title a bit bigger
         (set-face-attribute 'org-document-title t
-                            :font "Envy Code R" :weight
-                            'bold :height 3
+                            :font steel-code-font  :weight
+                            'bold :height 0.99
                             )
         )
       )
