@@ -1,11 +1,13 @@
 #+TITLE: Steel Sky Config
 * Introduction
-The Steel Sky org file generates my favorite emacs config.
+
+This org file generates my favorite emacs config.
+
 The configuration is arranged with different sections as headings. <tab> to expand.
 
 The goal is to have one emacs config that will make my life as a developer, parent, love and friend easier.
 
-To disable a feature you can hit `M-;`  to comment out a section.
+To disable a feature you can hit `M-;` when having your cursor in the heading.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;;; Steel sky config -- steel.el
@@ -22,17 +24,19 @@ Here is your oppurtunity to style some quick settings. The directory is
 
   ;; Set theme, there are loads which you can load via. M-x load-theme.
   ;; Remember the name and you can use it as default by changing this value.
-  (defvar steel-theme 'doom-city-lights)
+  (defvar steel-theme 'spacemacs-dark)
 
   ;; Directory where you store your org-files. This is thought to be used
   ;; with org-roam. Which links different org-file like a hive-mind :O
-  (defvar steel-org-dir "~/org-sphere")
+  (defvar steel-org-dir "~/org-files")
 
   ;; Preferred font for coding. There are many out there, this is mine.
   (defvar steel-code-font "Envy Code R")
 
   ;; Org style font.
   (defvar steel-org-font "Roboto")
+
+  (defvar steel-org-italic-font "Roboto, Italic")
 
   ;; The local user's font directory. This works for debian'ish distros.
   (defvar steel-font-dir "~/.local/share/fonts")
@@ -44,7 +48,7 @@ Here is your oppurtunity to style some quick settings. The directory is
 
 * Package management
 
-This section sets up the repositories elpa and melpa. As well as package.el which will manage installation of all the other different packages.
+This _section_ sets up the repositories elpa and melpa. As well as package.el which will manage installation of all the other different packages.
 
 ** Initialize repositories and package.el
 https://github.com/jwiegley/use-package
@@ -94,8 +98,24 @@ Automatically keeps all the Emacs packages fresh!
     )
 #+END_SRC
 * General editor configuration
-** Put temp-savefiles somewhere else, not polluting the working directory
-Many people is
+
+Here are the tweaks of the more general configuration of Emacs. Such as not creating a lot of backup files, save minibuffer history etc.
+
+** Clock and calendar
+
+As a European I like my extra 12 hours. And we start work on mondays.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (setq european-calendar-style 't)
+  (setq calendar-week-start-day 1)
+
+#+END_SRC
+
+** Say no to pollute the working directory
+
+This is some old code I found somewhere on the vast wide web. It should probably be updated to actually save some backups somewhere...
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (setq make-backup-files nil) ; stop creating those backup~ files
   (setq auto-save-default nil) ; stop creating those #autosave# files
@@ -107,22 +127,35 @@ Many people is
      kept-new-versions 6
      kept-old-versions 2
      version-control t)       ; use versioned backups
+
 #+END_SRC
+
 ** Save minibuffer history such as commands etc.
+
+Some minibuffer settings
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 (savehist-mode t)
-(setq history-length 5)
+(setq history-length 10)
 #+END_SRC
+
 ** Omit warnings
+
+The native compiler speeds up things a great lot. However it is very chatty about warnings, so let's keep it quite please.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
+
   ;; Dismiss native compilation warnings to pop up everywhere.
   (setq native-comp-async-report-warnings-errors 'silent)
+
 #+END_SRC
+
 ** Identation
+
+The big fat indentation list. I usually like to use 2 spaces for indentation, but in indentation controlled languages like Python it better with 4.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; Defining indentation
-  (setq european-calendar-style 't)  ; European style calendar
-  (setq calendar-week-start-day 1)
   (setq require-final-newline 't)
   (setq tab-width 2)
   (setq standard-indent 2)
@@ -160,15 +193,23 @@ Many people is
             )
 #+END_SRC
 ** Hot keys
+
+Here are some custom set keybindings, that are global. Keybindings for different modes and features are set under that specific feature.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
+
   ;; Press CTRL-ALT-r to restart emacs
   (global-set-key (kbd "C-M-r") 'restart-emacs)
+  (global-set-key (kbd "C-s-w") 'whitespace-cleanup)
+
 #+END_SRC
 
 * Editor features
 ** Multi-cursors
 https://github.com/magnars/multiple-cursors.el
-"Because sometimes one cursor ain't enough" - Stephen Hawking (or an impersonator)
+
+/"Because sometimes one cursor ain't enough"/
+- Stephen Hawking (or a really good impersonator)
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package multiple-cursors
@@ -182,9 +223,12 @@ https://github.com/magnars/multiple-cursors.el
       )
     )
 #+END_SRC
+
 ** YaSnippets
 https://github.com/joaotavora/yasnippet
-YaSnippet so you easy can use mnemonics for inserting snippets of code a lots more.
+
+*YaSnippet* so you easy can use mnemonics for inserting snippets of code PLUS a lot more. Like ascii art?
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package yasnippet
     :ensure t
@@ -195,7 +239,7 @@ YaSnippet so you easy can use mnemonics for inserting snippets of code a lots mo
 #+END_SRC
 
 
-Create a new snippet with M-x yas/new-snippet
+Ex. Create a new snippet with M-x yas/new-snippet
 #+BEGIN_SRC
 # -*- mode: snippet -*-
 # name: Python generate class
@@ -210,6 +254,10 @@ $0 # Cursor goes here
 #+END_SRC
 
 ** Move text
+https://github.com/emacsfodder/move-text
+
+There are days you would like to move a section or a line up in code or text. Say hello to move-text.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (defun move-text-steel-bindings ()
     "Bind `move-text-up' and `move-text-down' to M-up & M-down."
@@ -223,18 +271,54 @@ $0 # Cursor goes here
     (move-text-steel-bindings)
     )
 #+END_SRC
+
 ** CHAT GPT shell
 https://github.com/xenodium/chatgpt-shell
+
 Use chat-gpt straight in Emacs, or even a local AI model.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package chatgpt-shell
     :ensure t
     )
 
 #+END_SRC
+
+** Custom hooks!
+
+Here are some custom hooks, like formatting some files before saving etc.
+
+*Clean up* - white-space before saving an org file
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (defun steel/org-mode-before-save-hook ()
+    "Remove trailing whitespace before saving an Org file."
+    (when (eq major-mode 'org-mode)
+      (delete-trailing-whitespace)))
+  (add-hook 'before-save-hook #'steel/org-mode-before-save-hook)
+
+#+END_SRC
+
+*Make markdown* - After saving a README.org
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (defun steel/org-export-to-md-on-save ()
+    "Automatically export README.org to README.md on save."
+    (when (and (string= (buffer-file-name) (expand-file-name "README.org"))
+               (eq major-mode 'org-mode))
+      (org-md-export-to-markdown)))
+  (add-hook 'after-save-hook #'steel/org-export-to-md-on-save)
+
+#+END_SRC
+
 * Look and feel
+
+This section coveres the look and feel of Steel Sky. Everything from themes, fonts and more graphical elements of the editor. Plus some tweaks and modifications.
+
 ** Install fonts and font-icon pack
-Checks whether my favorite font is installed otherwise it will copy it to the default,  user based font-dir.
+
+Checks whether my favorite fonts are installed, otherwise it will copy it to the user's default font directory and update the font cache.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (if(file-directory-p steel-font-dir)
       (message "Local font directory already exists.")
@@ -278,7 +362,7 @@ Checks whether my favorite font is installed otherwise it will copy it to the de
     )
 #+END_SRC
 
-All the icons
+*All the icons*
 https://github.com/domtronn/all-the-icons.el
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package all-the-icons
@@ -292,7 +376,7 @@ https://github.com/domtronn/all-the-icons.el
     )
 #+END_SRC
 
-nerd-icons
+*nerd-icons*
 https://github.com/rainstormstudio/nerd-icons.el
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package nerd-icons
@@ -305,8 +389,11 @@ https://github.com/rainstormstudio/nerd-icons.el
       (write-region "Installed\n" nil "~/.emacs.d/.install-flags/nerd-icons-fonts-installed.flag"))
     )
 #+END_SRC
+
 ** Install theming
+
 Installs an array of different themes.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; Cool themes,
   ;; spacemacs-dark
@@ -341,14 +428,13 @@ Installs an array of different themes.
                                 :weight 'semi-bold
                                 :size 12.0))
             (show-paren-mode +1)
-            ;;(global-hl-line-mode)
+            (global-hl-line-mode)
             (set-frame-font my:rice:font nil t)
             (add-to-list  'default-frame-alist
                           `(font . ,(font-xlfd-name my:rice:font))))
     :config (progn
               (load-theme chtheme t)
               (enable-theme chtheme )))
-
 
   (use-package ewal-evil-cursors
     :ensure t
@@ -357,14 +443,21 @@ Installs an array of different themes.
              :apply t :spaceline t))
 
 #+END_SRC
+
 ** Set background opacity
+
+This changes the opacity the background in the buffers.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (set-frame-parameter (selected-frame) 'alpha `(,steel-opacity . 100))
   ;;(add-to-list 'default-frame-alist '(alpha . (steel-opacity . 100)))
 #+END_SRC
+
 ** Doom-modeline
 https://github.com/seagle0128/doom-modeline
-Installs the doom-modeline
+
+Doom modeline looks sleek. Let's install.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package doom-modeline
     :ensure t
@@ -373,8 +466,11 @@ Installs the doom-modeline
   (setq doom-modeline-height 40)
   (setq doom-modeline-time-analogue-clock nil)
 #+END_SRC
+
 *** Time
-Shows the time in 24hr format
+
+Shows the time in 24hr format.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (setq display-time-24hr-format t)
   (setq display-time-default-load-average nil)
@@ -382,27 +478,37 @@ Shows the time in 24hr format
   (display-time-mode 1)
 #+END_SRC
 *** Battery
+
 Show battery information if enabled
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (display-battery-mode t)
 #+END_SRC
 
 ** Line numbers
+
 Coding with line numbers is a joy and a priviledge!
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; Alternatively, to use it only in programming modes:
   (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 #+END_SRC
+
 ** Column mode
+
+Shows which column number you are on.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package column-number
     :ensure nil
     :hook (after-init . column-number-mode)
     )
 #+END_SRC
+
 ** Hide buffers
-Get rid of *Messages* *Completions* while sometimes informative, mostly annoying. And bypassing
-the startup message, since we want to use the dashboard.
+
+Get rid of **Messages* *Completions** while sometimes informative, mostly annoying. And bypassing the startup message, since we want to use the dashboard.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; Removes *messages* from the buffer.
   ;;(setq-default message-log-max nil)
@@ -431,17 +537,23 @@ the startup message, since we want to use the dashboard.
 
   (setq inhibit-startup-message t)   ; Don't want any startup message
   #+END_SRC
+
 ** Get rid off menu bar and Scrollbars and set
-The menubar has to go! Bye!
+
+In order to create a focused environment with out any other distractions than text, the menu and scrollbars has to go.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (menu-bar-mode -99)
   (tool-bar-mode 0)
   ;; No scrollbars!
   (scroll-bar-mode -1)
 #+END_SRC
+
 * Dashboard
+
 https://github.com/emacs-dashboard/emacs-dashboard
 A custom start page if nothing else is wanted.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package dashboard
     :ensure t
@@ -460,9 +572,13 @@ A custom start page if nothing else is wanted.
 #+END_SRC
 
 * Window navigation
+
 Packages that are making navigation between different windows easier.
+
 ** Windmove
-A built-in feature that makes it easier to move around between diffent windows.
+
+Rejoice! Gone are the days of /`C-x o`/.  When having many areas open this neat feature comes very useful.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package windmove
     :ensure nil
@@ -475,8 +591,11 @@ A built-in feature that makes it easier to move around between diffent windows.
      )
     )
 #+END_SRC
+
 ** Winner
+
 It's easy to f*ck things up especially if you have a nice window layout. That's why winner was invented and people rejoiced. Finally we are all winners.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package winner
     :ensure nil
@@ -486,19 +605,26 @@ It's easy to f*ck things up especially if you have a nice window layout. That's 
 
 ** Golden-Ratio
 https://github.com/roman/golden-ratio.el
-Golden ratio slightly enlarges an active window.
+
+Golden ratio slightly enlarges an active window. Useful when working with smaller screen sizes.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package golden-ratio
     :ensure t
     :config
     (setq golden-ratio-auto-scale t)
+    (golden-ratio-mode 1)
     )
 #+END_SRC
 
 * Linting, language servers and auto complete
+
+Settings for all the different autocomplete and linting features.
+
 ** Company mode
 https://company-mode.github.io/
-The interface for autocomplete and a lot more.
+
+The interface for *autocomplete* and a lot more.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package company
@@ -556,6 +682,7 @@ Support for language servers, such as pyright and ruff (only linting)
     :ensure t
     )
 #+END_SRC
+
 ** FlyCheck
 https://www.flycheck.org/en/latest/
 A detailed linter frontend.
@@ -575,14 +702,22 @@ A detailed linter frontend.
     )
     #+END_SRC
 * Org-mode
+
+This section covers everything about org-mode, the purpose of Emacs and the purpose of life.
+
 ** Olivetti
-Puts org mode in center for better writing experience.
+
+Puts org mode in center for *better writing experience*.
+Like a typewriter, such as...
+
 #+BEGIN_SRC emacs-lisp :tangle yes
+
   (use-package olivetti
     :ensure t
     :init
     (setq olivetti-body-width 0.4)
     )
+
 #+END_SRC
 
 ** Org mode
@@ -604,10 +739,6 @@ org-mode is nowadays bundled with Emacs. But I also added some extra packages.
     :config
     ;;(add-hook 'org-mode-hook #'org-modern-mode)
 
-    (custom-set-faces
-     '(org-block ((t (:family "Envy Code R" :height 120 :background "#181C24")))))
-
-
     (set-face-attribute 'variable-pitch nil :family "Roboto" :weight 'light :height 160)
 
     (set-face-attribute 'fixed-pitch t
@@ -624,6 +755,7 @@ org-mode is nowadays bundled with Emacs. But I also added some extra packages.
     (set-face-attribute 'org-block-begin-line nil :background "#0e191c" :foreground "#4f9de0")
 
     (setq org-hide-leading-stars t)
+    (setq org-hide-emphasis-markers t)
     (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
     ;; Resize Org headings
     (dolist (face '((org-level-1 . 1.6)
@@ -675,19 +807,38 @@ org-mode is nowadays bundled with Emacs. But I also added some extra packages.
   (setq org-agenda-files (directory-files-recursively steel-org-dir "\\.org$"))
   (setq org-todo-keywords
         '((sequence "TODO(t)" "|" "DONE(d)")
-          (sequence "REPORT(r)" "BUG(b)" "NEEDINFO(i)" "WAITING(w)" "KNOWNCAUSE(k)" "|" "FIXED(f)")))
+          (sequence "REPORT(r)" "EVENT(e)" "BUG(b)" "NEEDINFO(i)" "WAITING(w)" "KNOWNCAUSE(k)" "|" "FIXED(f)")))
 
 #+END_SRC
 
 ** org-modern
 https://github.com/minad/org-modern
 
-Some cosmetic improvements of org-mode. Like bullet-points and a more neater src block.
+Some cosmetic /improvements/ of org-mode. Like bullet-points and a more neater src block.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package org-modern
     :ensure t
     :config
+    (custom-set-faces
+     '(org-block ((t (
+                      :family steel-code-font
+                              :height 120
+                              :background "#181C24")
+                     )
+                  ))
+     '(org-bold ((t (
+                     :weight bold
+                             ))))
+     '(italic ((t (
+                   :family steel-org-italic-font
+                           :slant italic
+                           :underline nil))))
+     '(org-underline ((t (
+                          :underline t
+                                     ))))
+     )
+
     (setq org-startup-folded t
           org-auto-align-tags t
           org-pretty-entities nil
@@ -697,7 +848,7 @@ Some cosmetic improvements of org-mode. Like bullet-points and a more neater src
           org-insert-heading-respect-content t
           ;; Don't style the following
           org-modern-tag nil
-          org-modern-priority nil
+          org-modern-priority t
           org-modern-todo t
           org-modern-table t
           org-modern-star 'replace
@@ -718,6 +869,7 @@ Some cosmetic improvements of org-mode. Like bullet-points and a more neater src
 #+END_SRC
 
 ** org-roam
+
 Org-roam is supposed to be like a extended mind of org-documents. Not tested fully yet.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -742,14 +894,19 @@ Org-roam is supposed to be like a extended mind of org-documents. Not tested ful
     :config
     (org-roam-setup)
     )
-  (add-to-list 'completion-at-point-functions #'org-roam-complete-link-at-point)
+
 #+END_SRC
 
 * File system navigation
+
+This section covers file managers and file system navigation.
+
 ** Treemacs
 https://github.com/Alexander-Miller/treemacs
+
 File / Projectbrowser, can look into files and everything!
 This section contains all the configurable parameters.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package treemacs
     :ensure t
@@ -871,7 +1028,9 @@ This section contains all the configurable parameters.
 
 ** Helm
 https://emacs-helm.github.io/helm/
+
 The nifty file browser and interface enhancer
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package helm-icons
     :ensure t
@@ -935,7 +1094,13 @@ The nifty file browser and interface enhancer
 #+END_SRC
 
 * Languages and formats
+
+Here are all the particular settings for each language mode. Some of them are using a language server such as basedpyright and linters such as ruff.
+
 ** Python mode
+
+This mode is depending on that you are using virtual environments with the venv in the directory `.venv`.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package python
     :hook
@@ -950,22 +1115,27 @@ The nifty file browser and interface enhancer
     (pyvenv-mode t)
     (setq pyvenv-post-activate-hooks
           (list (lambda ()
-                  (setq python-shell-interpreter (concat pyvenv-virtual-env "bin/ipython")))))
+                  (setq python-shell-interpreter
+                        (concat pyvenv-virtual-env "bin/ipython")
+                        ))))
     (setq pyvenv-post-deactivate-hooks
           (list (lambda ()
                   (setq python-shell-interpreter "python3"))))
     )
 
-  ;; Put the column indicator at line 79
+  ;; Put the column indicator at line 80
   (add-hook 'python-mode-hook
             (lambda ()
-              (set-fill-column 79)
-
+              (set-fill-column 80)
               )
             )
 #+END_SRC
+
 ** LUA
-Basic support for lua
+https://github.com/immerrr/lua-mode
+
+Some basic support for LUA
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package lua-mode
     :ensure t
@@ -973,9 +1143,12 @@ Basic support for lua
     :interpreter "lua"
     )
 #+END_SRC
+
 ** RUST
 https://github.com/rust-lang/rust-mode
+
 Rudimentary Rust support
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package rust-mode
     :ensure t
@@ -989,25 +1162,36 @@ Rudimentary Rust support
 
 ** Web Mode
 https://web-mode.org/
+
 What a beast of a mode! Supports HTML, CSS, Javascript!
+Has not been configured yet...
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package web-mode
     :ensure t
     )
 #+END_SRC
+
 ** Conf mode
+
 We would also like to use conf-mode on some system config files like systemd files.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package conf-mode
     :mode (
            "\\.service?\\'"
            "\\.timer?\\'"
+           "\\.env\\'"
            )
     )
 #+END_SRC
+
 ** Markdown mode
 https://jblevins.org/projects/markdown-mode/
+
 A lesser format than .org, but it's used everywhere
+
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package markdown-mode
     :ensure t
@@ -1018,7 +1202,9 @@ A lesser format than .org, but it's used everywhere
     )
 #+END_SRC
 * Unused
+
 Packages that are not active for different reasons. Could be buggy or just not needed at the moment. But placed here to be served as a reminder of their existence.
+
 ** COMMENT Eglot
 I had a hard time getting Eglot to work nicely. Even though it should be more effecient.
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1050,6 +1236,8 @@ I had projectile installed in the past. But I'm wondering if it is needed?
     :bind-keymap ("C-c p" . projectile-command-map)
     )
 #+END_SRC
+
 * Wishlist - To add/fix
-- Fix the annoying lint messages in the Python buffer
-- Make rust mode a great experience, with linting and auto-complete.
++ [ ]  Fix the annoying lint messages in the Python buffer.
++ [ ]  Fix the annoying font issue when running emacs as a client, see here: https://systemcrafters.net/emacs-tips/using-the-emacs-daemon/#configuring-the-ui-for-new-frames
++ [ ]  Make rust mode a great experience, with linting and auto-complete.
