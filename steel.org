@@ -31,18 +31,21 @@ Here is your oppurtunity to style some quick settings. The directory is
   (defvar steel-org-dir "~/org-files")
 
   ;; Preferred font for coding. There are many out there, this is mine.
-  (defvar steel-code-font "Envy Code R")
+  (defvar steel-code-font "Envy Code R"
+    "The standard coding font in steel sky"
+    )
 
   ;; Org style font.
-  (defvar steel-org-font "Roboto")
-
-  (defvar steel-org-italic-font "Roboto, Italic")
+  (defvar steel-org-font "Roboto"
+    "This variable controls the main font in org mode"
+    )
 
   ;; The local user's font directory. This works for debian'ish distros.
   (defvar steel-font-dir "~/.local/share/fonts")
 
   ;; Opacity value 100 is fully opaque.
   (defvar steel-opacity 97)
+
 
 #+END_SRC
 
@@ -117,6 +120,7 @@ As a European I like my extra 12 hours. And we start work on mondays.
 This is some old code I found somewhere on the vast wide web. It should probably be updated to actually save some backups somewhere...
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+
   (setq make-backup-files nil) ; stop creating those backup~ files
   (setq auto-save-default nil) ; stop creating those #autosave# files
   (setq
@@ -275,17 +279,19 @@ https://github.com/emacsfodder/move-text
 There are days you would like to move a section or a line up in code or text. Say hello to move-text.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+
   (defun move-text-steel-bindings ()
-    "Bind `move-text-up' and `move-text-down' to M-up & M-down."
-    (interactive)
-    (global-set-key [M-s-down] 'move-text-down)
-    (global-set-key [M-s-up]   'move-text-up))
+      "Bind `move-text-up' and `move-text-down' to M-up & M-down."
+      (interactive)
+      (global-set-key [M-s-down] 'move-text-down)
+      (global-set-key [M-s-up]   'move-text-up))
 
   (use-package move-text
     :ensure t
     :config
     (move-text-steel-bindings)
     )
+
 #+END_SRC
 
 ** CHAT GPT shell
@@ -360,7 +366,6 @@ Checks whether my favorite fonts are installed, otherwise it will copy it to the
   (let ((fonts-to-install
          '(
           "roboto.ttf"
-          "roboto-italic.ttf"
           "envy.ttf"
           )))
     (let ((new-files nil))
@@ -444,7 +449,7 @@ Installs an array of different themes.
                                 :weight 'semi-bold
                                 :size 12.0))
             (show-paren-mode +1)
-            (global-hl-line-mode)
+            ;;(global-hl-line-mode)
             (set-frame-font my:rice:font nil t)
             (add-to-list  'default-frame-alist
                           `(font . ,(font-xlfd-name my:rice:font))))
@@ -828,6 +833,7 @@ org-mode is nowadays bundled with Emacs. But I also added some extra packages.
 #+END_SRC
 
 ** org-modern
+
 https://github.com/minad/org-modern
 
 Some cosmetic /improvements/ of org-mode. Like bullet-points and a more neater src block.
@@ -837,22 +843,12 @@ Some cosmetic /improvements/ of org-mode. Like bullet-points and a more neater s
     :ensure t
     :config
     (custom-set-faces
-     '(org-block ((t (
-                      :family steel-code-font
-                              :height 120
-                              :background "#181C24")
-                     )
-                  ))
-     '(org-bold ((t (
-                     :weight bold
-                             ))))
-     '(italic ((t (
-                   :family steel-org-italic-font
-                           :slant italic
-                           :underline nil))))
-     '(org-underline ((t (
-                          :underline t
-                                     ))))
+     `(org-block ((t (:family ,steel-code-font :height 120 :background "#181C24" ))))
+     `(org-block-begin-line ((t (:family ,steel-code-font :height 120 ))))
+     `(org-block-end-line ((t (:family ,steel-code-font :height 120 ))))
+     `(org-bold ((t (:weight bold ))))
+     `(italic ((t (:family ,steel-org-font :slant italic :underline nil))))
+     `(org-underline ((t (:underline t))))
      )
 
     (setq org-startup-folded t
@@ -1248,6 +1244,9 @@ I had projectile installed in the past. But I'm wondering if it is needed?
 #+END_SRC
 
 * Wishlist - To add/fix
-+ [ ]  Fix the annoying lint messages in the Python buffer.
+** TODO List of things to fix
+
+It would be cool if the following could be fixed
 + [ ]  Fix the annoying font issue when running emacs as a client, see here: https://systemcrafters.net/emacs-tips/using-the-emacs-daemon/#configuring-the-ui-for-new-frames
++ [ ]  Fix the annoying lint messages in the Python buffer.
 + [ ]  Make rust mode a great experience, with linting and auto-complete.
