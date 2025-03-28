@@ -135,8 +135,24 @@ This is some old code I found somewhere on the vast wide web. It should probably
 Some minibuffer settings
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(savehist-mode t)
-(setq history-length 10)
+
+  (savehist-mode t)
+  (setq history-length 10)
+
+#+END_SRC
+
+** Creation of directories
+
+This will create the steel-org dir if not existing.
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (progn
+              (if(file-directory-p steel-org-dir)
+                  (message "org directory already exists.")
+                (make-directory steel-org-dir)
+                )
+              )
+
 #+END_SRC
 
 ** Omit warnings
@@ -875,12 +891,6 @@ Org-roam is supposed to be like a extended mind of org-documents. Not tested ful
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package org-roam
     :ensure t
-    :init (progn
-            (if(file-directory-p steel-org-dir)
-                (message "org directory already exists.")
-              (make-directory steel-org-dir)
-              )
-            )
     :custom
     (org-roam-directory steel-org-dir)
     (org-roam-completion-everywhere t)
