@@ -3,13 +3,12 @@
 
 This org file generates my favorite emacs config.
 
-The configuration is arranged with different sections as headings. <tab> to expand.
+The configuration is arranged with different sections as headings. ~<tab>~ to expand. ~<shift>-<tab>~ to expand/collapse all the headings. The goal is to have one emacs config that will make my life as a developer, parent, love and friend easier.
 
-The goal is to have one emacs config that will make my life as a developer, parent, love and friend easier.
-
-To disable a feature you can hit `M-;` when having your cursor in the heading.
+To disable a feature you can hit ~M-;~ when having your cursor in the heading.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+
   ;;; Steel sky config -- steel.el
   ;;; This file has been generated from steel.org
   ;;; please edit that file instead.
@@ -18,34 +17,47 @@ To disable a feature you can hit `M-;` when having your cursor in the heading.
 
 * Variables for you to set!
 
-Here is your oppurtunity to style some quick settings. The directory is
+Here is your oppurtunity to style some quick settings.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 
-  ;; Set theme, there are loads which you can load via. M-x load-theme.
-  ;; Remember the name and you can use it as default by changing this value.
-  (defvar steel-theme 'spacemacs-dark)
+      ;; Set theme, there are loads which you can load via. M-x load-theme.
+      ;; Remember the name and you can use it as default by changing this value.
+      (defvar steel-theme 'spacemacs-dark
+        "Which theme to use"
+        )
 
-  ;; Directory where you store your org-files. This is thought to be used
-  ;; with org-roam. Which links different org-file like a hive-mind :O
-  (defvar steel-org-dir "~/org-files")
+      ;; Directory where you store your org-files. This is thought to be used
+      ;; with org-roam. Which links different org-file like a hive-mind :O
+      (defvar steel-org-dir "~/org-files"
+        "Where all the org files should live"
+        )
 
-  ;; Preferred font for coding. There are many out there, this is mine.
-  (defvar steel-code-font "Envy Code R"
-    "The standard coding font in steel sky"
-    )
+      ;; Preferred font for coding. There are many out there, this is mine.
+      (defvar steel-code-font "Envy Code R"
+        "The standard coding font in steel sky"
+        )
 
-  ;; Org style font.
-  (defvar steel-org-font "Roboto"
-    "This variable controls the main font in org mode"
-    )
+      ;; Org style font.
+      (defvar steel-org-font "Roboto"
+        "This variable controls the main font in org mode"
+        )
 
-  ;; The local user's font directory. This works for debian'ish distros.
-  (defvar steel-font-dir "~/.local/share/fonts")
+      ;; Should org mode start in presenter mode
+      (defvar steel-org-use-presenter nil
+        "If t org mode will work in presenter mode, good for writing."
+        )
 
-  ;; Opacity value 100 is fully opaque.
-  (defvar steel-opacity 97)
 
+      ;; The local user's font directory. This works for debian'ish distros.
+      (defvar steel-font-dir "~/.local/share/fonts"
+        "The user's local font dir"
+        )
+
+      ;; Opacity value 100 is fully opaque.
+      (defvar steel-opacity 95
+        "The value of background opacity"
+        )
 
 #+END_SRC
 
@@ -212,18 +224,6 @@ The big fat indentation list. I usually like to use 2 spaces for indentation, bu
               )
             )
 #+END_SRC
-** Hot keys
-
-Here are some custom set keybindings, that are global. Keybindings for different modes and features are set under that specific feature.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-
-  ;; Press CTRL-ALT-r to restart emacs
-  (global-set-key (kbd "C-M-r") 'restart-emacs)
-  (global-set-key (kbd "C-s-w") 'whitespace-cleanup)
-
-#+END_SRC
-
 * Editor features
 ** Multi-cursors
 https://github.com/magnars/multiple-cursors.el
@@ -245,6 +245,7 @@ https://github.com/magnars/multiple-cursors.el
 #+END_SRC
 
 ** YaSnippets
+
 https://github.com/joaotavora/yasnippet
 
 *YaSnippet* so you easy can use mnemonics for inserting snippets of code PLUS a lot more. Like ascii art?
@@ -259,7 +260,7 @@ https://github.com/joaotavora/yasnippet
 #+END_SRC
 
 
-Ex. Create a new snippet with M-x yas/new-snippet
+Ex. Create a new snippet with ~M-x~ =yas/new-snippet=
 #+BEGIN_SRC
 # -*- mode: snippet -*-
 # name: Python generate class
@@ -274,6 +275,7 @@ $0 # Cursor goes here
 #+END_SRC
 
 ** Move text
+
 https://github.com/emacsfodder/move-text
 
 There are days you would like to move a section or a line up in code or text. Say hello to move-text.
@@ -306,7 +308,7 @@ Use chat-gpt straight in Emacs, or even a local AI model.
 
 #+END_SRC
 
-** Custom hooks!
+** Steel hooks and functions!
 
 Here are some custom hooks, like formatting some files before saving etc.
 
@@ -330,6 +332,32 @@ Here are some custom hooks, like formatting some files before saving etc.
                (eq major-mode 'org-mode))
       (org-md-export-to-markdown)))
   (add-hook 'after-save-hook #'steel/org-export-to-md-on-save)
+
+#+END_SRC
+
+Switch /work or presenter/ mode in org-mode
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (defun steel/switch-presenter-work-org-mode ()
+    (interactive)
+    (if steel-org-use-presenter
+        (setq steel-org-use-presenter nil)
+      (setq steel-org-use-presenter t)
+      )
+    )
+#+END_SRC
+
+** Steel hot keys
+
+Here are some custom set keybindings, that are global. Keybindings for different modes and features are set under that specific feature.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  ;; Press CTRL-ALT-r to restart emacs
+  (global-set-key (kbd "C-M-r") 'restart-emacs)
+  (global-set-key (kbd "C-s-w") 'whitespace-cleanup)
+  (global-set-key (kbd "C-M-r") 'restart-emacs)
+  (global-set-key (kbd "C-x M-o") 'steel/switch-presenter-work-org-mode)
+#+END_SRC
 
 #+END_SRC
 
@@ -470,8 +498,21 @@ Installs an array of different themes.
 This changes the opacity the background in the buffers.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (set-frame-parameter (selected-frame) 'alpha `(,steel-opacity . 100))
-  ;;(add-to-list 'default-frame-alist '(alpha . (steel-opacity . 100)))
+
+  (defun steel/transparency()
+    (set-frame-parameter (selected-frame) 'alpha `(,steel-opacity . 100))
+    )
+
+  (if (daemonp)
+      (add-hook 'after-make-frame-functions
+                (lambda (frame)
+                  (with-selected-frame frame
+                    (steel/transparency))))
+    (steel/transparency)
+    )
+
+  ;;(add-to-list 'default-frame-alist (steel/transparency))
+
 #+END_SRC
 
 ** Doom-modeline
@@ -480,12 +521,14 @@ https://github.com/seagle0128/doom-modeline
 Doom modeline looks sleek. Let's install.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+
   (use-package doom-modeline
     :ensure t
     :hook (after-init . doom-modeline-mode)
   )
   (setq doom-modeline-height 40)
   (setq doom-modeline-time-analogue-clock nil)
+
 #+END_SRC
 
 *** Time
@@ -503,7 +546,9 @@ Shows the time in 24hr format.
 Show battery information if enabled
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+
   (display-battery-mode t)
+
 #+END_SRC
 
 ** Line numbers
@@ -570,12 +615,77 @@ In order to create a focused environment with out any other distractions than te
   (scroll-bar-mode -1)
 #+END_SRC
 
+* Setting up faces
+
+Here are all the face settings defined. Also a hook that hopefully enables emacs-daemon to render the fonts correctly.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (defun steel/set-org-work-faces()
+    (steel/set-org-big-screen-faces)
+    )
+  (defun steel/set-org-big-screen-faces ()
+      (message "SETTING THE FACES ON STEEL!")
+      (set-face-attribute 'variable-pitch nil :family "Roboto" :weight 'light :height 270)
+      ;; Set the sizes of the headings
+      (dolist (face '((org-level-1 . 1.45)
+                      (org-level-2 . 1.2)
+                      (org-level-3 . 1.0)
+                      (org-level-4 . 0.9)
+                      (org-level-5 . 0.9)
+                      (org-level-6 . 0.9)
+                      (org-level-7 . 0.9)
+                      (org-level-8 . 0.9)))
+        (set-face-attribute (car face) nil
+                            :font steel-org-font
+                            :weight 'light
+                            :height (cdr face))
+        )
+      (set-face-attribute 'org-block nil :family steel-code-font :height 0.7)
+      (set-face-attribute 'org-block-begin-line nil
+                          :family steel-code-font
+                          :height 0.6
+                          :foreground "goldenrod"
+                          :background "#0e191c"
+                          :box
+                          '(:line-width (20 . 20) :color "#0e191c" :style nil)
+                          )
+      (set-face-attribute 'org-block-end-line nil
+                          :family steel-code-font
+                          :height 0.7
+                          :foreground "dark violet"
+                          :background "#0e191c"
+                          :box
+                          '(:line-width (20 . 20) :color "#0e191c" :style nil)
+                          )
+
+      (set-face-attribute 'org-link nil :weight 'light )
+      (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch) :height 0.85 )
+      (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+      (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+      (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+      (set-face-attribute 'org-document-title nil :font steel-org-font :height 1.9 )
+      (set-face-attribute 'font-lock-comment-delimiter-face nil :background nil)
+      (set-face-attribute 'font-lock-comment-face nil :background nil :foreground "#888888" )
+      )
+
+  (if (daemonp)
+      (add-hook 'after-make-frame-functions
+                (lambda (frame)
+                  (with-selected-frame frame
+                    (steel/set-org-work-faces))))
+    (steel/set-org-work-faces)
+    )
+  (add-hook 'after-init-hook #'steel/set-org-work-faces)
+
+#+END_SRC
 * Dashboard
 
 https://github.com/emacs-dashboard/emacs-dashboard
 A custom start page if nothing else is wanted.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+
   (use-package dashboard
     :ensure t
     :init (progn
@@ -590,6 +700,7 @@ A custom start page if nothing else is wanted.
               )
             )
     )
+
 #+END_SRC
 
 * Window navigation
@@ -615,13 +726,15 @@ Rejoice! Gone are the days of /`C-x o`/.  When having many areas open this neat 
 
 ** Winner
 
-It's easy to f*ck things up especially if you have a nice window layout. That's why winner was invented and people rejoiced. Finally we are all winners.
+It's easy to mess things up especially if you have a nice window layout. That's why winner was invented and people rejoiced. Finally we are all winners.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+
   (use-package winner
-    :ensure nil
-    :config (winner-mode t)
-    )
+      :ensure nil
+      :config (winner-mode t)
+      )
+
 #+END_SRC
 
 ** Golden-Ratio
@@ -724,6 +837,8 @@ A detailed linter frontend.
     #+END_SRC
 * Org-mode
 
+https://orgmode.org/
+
 This section covers everything about org-mode, the purpose of Emacs and the purpose of life.
 
 ** Olivetti
@@ -756,73 +871,30 @@ org-mode is nowadays bundled with Emacs. But I also added some extra packages.
     (org-mode . olivetti-mode)
     (org-mode . visual-line-mode)
     (org-mode . org-indent-mode)
-    (org-mode . variable-pitch-mode) ;; Font se
+    (org-mode . variable-pitch-mode)
     :config
-    ;;(add-hook 'org-mode-hook #'org-modern-mode)
-
-    (set-face-attribute 'variable-pitch nil :family "Roboto" :weight 'light :height 160)
-
-    (set-face-attribute 'fixed-pitch t
-                        :font steel-org-font
-                        )
-
-    (set-face-attribute 'org-link nil
-                        :weight 'light
-                        )
-
-    (set-face-attribute 'default t
-                       :font steel-org-font
-                       )
-    (set-face-attribute 'org-block-begin-line nil :background "#0e191c" :foreground "#4f9de0")
-
     (setq org-hide-leading-stars t)
     (setq org-hide-emphasis-markers t)
     (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
-    ;; Resize Org headings
-    (dolist (face '((org-level-1 . 1.6)
-                    (org-level-2 . 1.4)
-                    (org-level-3 . 1.2)
-                    (org-level-4 . 1.0)
-                    (org-level-5 . 1.0)
-                    (org-level-6 . 1.0)
-                    (org-level-7 . 1.0)
-                    (org-level-8 . 1.0)))
-      (set-face-attribute (car face) nil
-                          :font steel-org-font
-                          ;;:weight 'bold
-                          :height (cdr face))
-      )
-
-    (set-face-attribute 'org-block t
-                        :font steel-org-font
-                        :height 0.8)
-
-
-    (set-face-attribute 'org-code t
-                         :inherit '(shadow fixed-pitch)
-                         :height 1.2
-                         )
-    ;;
-    (set-face-attribute 'org-verbatim t
-                        :inherit '(shadow fixed-pitch)
-                        :height 0.85
-                        )
-    (set-face-attribute 'org-special-keyword nil
-                        :inherit '(font-lock-comment-face fixed-pitch))
-    (set-face-attribute 'org-meta-line t
-                        :inherit '(font-lock-comment-face fixed-pitch))
-    (set-face-attribute 'org-checkbox t
-                        :inherit 'fixed-pitch)
-
-    ;; Make the document title a bit bigger
-    (set-face-attribute 'org-document-title nil
-                        :font steel-org-font
-                       ;; :weight 'bold
-                        :height 1.9
-                        )
     )
+
 #+END_SRC
+** Babel
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)  ;; Always enabled
+     (python . t)      ;; Enable Python
+     (shell . t)       ;; Enable Shell scripting
+     (js . t)          ;; Enable JavaScript
+     (sql . t)         ;; Enable SQL
+     (C . t)))         ;; Enable C/C++
+    (setq org-babel-python-command "python3")
+
+#+END_SRC
+
 ** Todo setup
+
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (setq org-agenda-files (directory-files-recursively steel-org-dir "\\.org$"))
@@ -842,15 +914,6 @@ Some cosmetic /improvements/ of org-mode. Like bullet-points and a more neater s
   (use-package org-modern
     :ensure t
     :config
-    (custom-set-faces
-     `(org-block ((t (:family ,steel-code-font :height 120 :background "#181C24" ))))
-     `(org-block-begin-line ((t (:family ,steel-code-font :height 120 ))))
-     `(org-block-end-line ((t (:family ,steel-code-font :height 120 ))))
-     `(org-bold ((t (:weight bold ))))
-     `(italic ((t (:family ,steel-org-font :slant italic :underline nil))))
-     `(org-underline ((t (:underline t))))
-     )
-
     (setq org-startup-folded t
           org-auto-align-tags t
           org-pretty-entities nil
@@ -885,35 +948,38 @@ Some cosmetic /improvements/ of org-mode. Like bullet-points and a more neater s
 Org-roam is supposed to be like a extended mind of org-documents. Not tested fully yet.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+
   (use-package org-roam
-    :ensure t
-    :custom
-    (org-roam-directory steel-org-dir)
-    (org-roam-completion-everywhere t)
-    :bind (
-           ("C-c n l" . org-roam-buffer-toggle)
-           ("C-c n f" . org-roam-node-find)
-           ("C-c n i" . org-roam-node-insert)
-           :map org-mode-map
-           ("C-M-i" . completion-at-point)
-           )
-    :config
-    (org-roam-setup)
-    )
+      :ensure t
+      :custom
+      (org-roam-directory steel-org-dir)
+      (org-roam-completion-everywhere t)
+      :bind (
+             ("C-c n l" . org-roam-buffer-toggle)
+             ("C-c n f" . org-roam-node-find)
+             ("C-c n i" . org-roam-node-insert)
+             :map org-mode-map
+             ("C-M-i" . completion-at-point)
+             )
+      :config
+      (org-roam-setup)
+      )
 
 #+END_SRC
 
 * File system navigation
 
-This section covers file managers and file system navigation.
+This section covers file managers and file system navigation. Both Treemacs and Helm.
 
 ** Treemacs
+
 https://github.com/Alexander-Miller/treemacs
 
 File / Projectbrowser, can look into files and everything!
 This section contains all the configurable parameters.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+
   (use-package treemacs
     :ensure t
     :defer t
@@ -1021,7 +1087,8 @@ This section contains all the configurable parameters.
     :after (treemacs magit)
     :ensure t)
 
-  (use-package treemacs-persp ;;treemacs-perspective if you use perspective.el vs. persp-mode
+  (use-package treemacs-persp
+    ;;treemacs-perspective if you use perspective.el vs. persp-mode
     :after (treemacs persp-mode) ;;or perspective vs. persp-mode
     :ensure t
     :config (treemacs-set-scope-type 'Perspectives))
@@ -1030,6 +1097,7 @@ This section contains all the configurable parameters.
     :after (treemacs)
     :ensure t
     :config (treemacs-set-scope-type 'Tabs))
+
 #+END_SRC
 
 ** Helm
@@ -1085,7 +1153,7 @@ The nifty file browser and interface enhancer
 
   (setq helm-display-function 'helm-display-buffer-in-own-frame
         helm-display-buffer-reuse-frame t
-        helm-use-undecorated-frame-option t
+        helm-use-undecorated-frame-option nil ;; CH from t
         helm-display-buffer-width 110
         )
 
@@ -1227,6 +1295,7 @@ I had a hard time getting Eglot to work nicely. Even though it should be more ef
                                             ("basedpyright-langserver" "--stdio")
                                             ))))
     )
+
   (use-package flymake-ruff
     :ensure t
     :hook(eglot-managed-mode . flymake-ruff-load)
@@ -1243,10 +1312,27 @@ I had projectile installed in the past. But I'm wondering if it is needed?
     )
 #+END_SRC
 
-* Wishlist - To add/fix
+* Misc
 ** TODO List of things to fix
 
 It would be cool if the following could be fixed
-+ [ ]  Fix the annoying font issue when running emacs as a client, see here: https://systemcrafters.net/emacs-tips/using-the-emacs-daemon/#configuring-the-ui-for-new-frames
++ [X]  Fix the annoying font issue when running emacs as a client, see here: https://systemcrafters.net/emacs-tips/using-the-emacs-daemon/#configuring-the-ui-for-new-frames
 + [ ]  Fix the annoying lint messages in the Python buffer.
 + [ ]  Make rust mode a great experience, with linting and auto-complete.
+
+** COMMENT Elisp examples
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  ;; To create something like a struct
+  (setq person (list :name "Alice" :age 30 :city "New York"))
+  (plist-get person :name)  ;; => "Alice"
+
+  ;; Or hash-tables
+  (setq person (make-hash-table :test 'equal))
+  (puthash "name" "Alice" person)
+  (puthash "age" 30 person)
+  (gethash "name" person) ;; => "Alice"
+
+  (set-face-attribute 'font-lock-comment-delimiter-face nil :background nil)
+  (set-face-attribute 'font-lock-comment-face nil :background nil :foreground "#444444" )
+#+END_SRC
