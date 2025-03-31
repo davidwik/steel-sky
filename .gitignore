@@ -26,3 +26,6 @@ projects
 org-roam.db
 .org-id-locations
 bookmarks
+personal.el
+personal.org
+data/

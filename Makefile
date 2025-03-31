@@ -3,6 +3,16 @@ define INIT_BODY
 (package-initialize)
 (org-babel-load-file (expand-file-name "steel.org"
                    user-emacs-directory))
+
+;; Also load the personal.org if exists for personal settings
+(message (expand-file-name "personal.org" user-emacs-directory))
+
+(if (file-exists-p (expand-file-name "personal.org"
+	user-emacs-directory))
+	(org-babel-load-file (expand-file-name "personal.org"
+		user-emacs-directory))
+(message "- personal.org not found, not loading.")
+)
 endef
 export INIT_BODY
 

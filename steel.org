@@ -1,3 +1,4 @@
+#+OPTIONS: toc:nil
 #+TITLE: Steel Sky Config
 * Introduction
 
@@ -226,12 +227,13 @@ The big fat indentation list. I usually like to use 2 spaces for indentation, bu
 #+END_SRC
 * Editor features
 ** Multi-cursors
+
 https://github.com/magnars/multiple-cursors.el
 
-/"Because sometimes one cursor ain't enough"/
+/"Because sometimes one cursor just ain't enough"/
 - Stephen Hawking (or a really good impersonator)
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+  #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package multiple-cursors
     :ensure t
     :config
@@ -357,7 +359,7 @@ Here are some custom set keybindings, that are global. Keybindings for different
   (global-set-key (kbd "C-s-w") 'whitespace-cleanup)
   (global-set-key (kbd "C-M-r") 'restart-emacs)
   (global-set-key (kbd "C-x M-o") 'steel/switch-presenter-work-org-mode)
-#+END_SRC
+  (global-set-key (kbd "C-c o a") 'org-agenda)
 
 #+END_SRC
 
@@ -878,6 +880,7 @@ org-mode is nowadays bundled with Emacs. But I also added some extra packages.
     (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
     )
 
+
 #+END_SRC
 ** Babel
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -898,10 +901,6 @@ org-mode is nowadays bundled with Emacs. But I also added some extra packages.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (setq org-agenda-files (directory-files-recursively steel-org-dir "\\.org$"))
-  (setq org-todo-keywords
-        '((sequence "TODO(t)" "|" "DONE(d)")
-          (sequence "REPORT(r)" "EVENT(e)" "BUG(b)" "NEEDINFO(i)" "WAITING(w)" "KNOWNCAUSE(k)" "|" "FIXED(f)")))
-
 #+END_SRC
 
 ** org-modern
