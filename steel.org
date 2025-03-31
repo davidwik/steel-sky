@@ -966,6 +966,16 @@ Org-roam is supposed to be like a extended mind of org-documents. Not tested ful
 
 #+END_SRC
 
+** Org-roam-ui
+
+Provides a graphical view (in browser, of all the different nodes)
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package org-roam-ui
+    :ensure t
+    )
+#+END_SRC
+
 * File system navigation
 
 This section covers file managers and file system navigation. Both Treemacs and Helm.
@@ -1312,13 +1322,19 @@ I had projectile installed in the past. But I'm wondering if it is needed?
 #+END_SRC
 
 * Misc
-** TODO List of things to fix
+** List of things to fix
 
 It would be cool if the following could be fixed
 + [X]  Fix the annoying font issue when running emacs as a client, see here: https://systemcrafters.net/emacs-tips/using-the-emacs-daemon/#configuring-the-ui-for-new-frames
 + [ ]  Fix the annoying lint messages in the Python buffer.
 + [ ]  Make rust mode a great experience, with linting and auto-complete.
-
+** Look into the followin packages
++ org-download - downloads images and stuff
++ openwith-mode - makes emacs open files in the correct applications
++ ob-mermaid - making flowchats, diagrams etc...
++ org-transclucent - stich org files together as one file (virtually)
++ org-super-agenda - super mode?
++ org-timeblock - time table of a day
 ** COMMENT Elisp examples
 #+BEGIN_SRC emacs-lisp :tangle yes
 
