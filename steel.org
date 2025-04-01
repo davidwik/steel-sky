@@ -22,43 +22,43 @@ Here is your oppurtunity to style some quick settings.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 
-      ;; Set theme, there are loads which you can load via. M-x load-theme.
-      ;; Remember the name and you can use it as default by changing this value.
-      (defvar steel-theme 'spacemacs-dark
-        "Which theme to use"
-        )
+  ;; Set theme, there are loads which you can load via. M-x load-theme.
+  ;; Remember the name and you can use it as default by changing this value.
+  (defvar steel-theme 'spacemacs-dark
+    "Which theme to use"
+    )
 
-      ;; Directory where you store your org-files. This is thought to be used
-      ;; with org-roam. Which links different org-file like a hive-mind :O
-      (defvar steel-org-dir "~/org-files"
-        "Where all the org files should live"
-        )
+  ;; Directory where you store your org-files. This is thought to be used
+  ;; with org-roam. Which links different org-file like a hive-mind :O
+  (defvar steel-org-dir "~/org-files"
+    "Where all the org files should live"
+    )
 
-      ;; Preferred font for coding. There are many out there, this is mine.
-      (defvar steel-code-font "Envy Code R"
-        "The standard coding font in steel sky"
-        )
+  ;; Preferred font for coding. There are many out there, this is mine.
+  (defvar steel-code-font "Envy Code R"
+    "The standard coding font in steel sky"
+    )
 
-      ;; Org style font.
-      (defvar steel-org-font "Roboto"
-        "This variable controls the main font in org mode"
-        )
+  ;; Org style font.
+  (defvar steel-org-font "Roboto"
+    "This variable controls the main font in org mode"
+    )
 
-      ;; Should org mode start in presenter mode
-      (defvar steel-org-use-presenter nil
-        "If t org mode will work in presenter mode, good for writing."
-        )
+  ;; Should org mode start in presenter mode. This is only for big monitors.
+  (defvar steel-org-use-presenter nil
+    "If t org mode will work in presenter mode, good for writing."
+    )
 
 
-      ;; The local user's font directory. This works for debian'ish distros.
-      (defvar steel-font-dir "~/.local/share/fonts"
-        "The user's local font dir"
-        )
+  ;; The local user's font directory. This works for debian'ish distros.
+  (defvar steel-font-dir "~/.local/share/fonts"
+    "The user's local font dir"
+    )
 
-      ;; Opacity value 100 is fully opaque.
-      (defvar steel-opacity 95
-        "The value of background opacity"
-        )
+  ;; Opacity value 100 is fully opaque.
+  (defvar steel-opacity 95
+    "The value of background opacity"
+    )
 
 #+END_SRC
 
@@ -164,11 +164,11 @@ This will create the steel-org dir if not existing.
 #+BEGIN_SRC emacs-lisp :tangle yes
 
   (progn
-              (if(file-directory-p steel-org-dir)
-                  (message "org directory already exists.")
-                (make-directory steel-org-dir)
-                )
-              )
+    (if(file-directory-p steel-org-dir)
+        (message "org directory already exists.")
+      (make-directory steel-org-dir)
+      )
+    )
 
 #+END_SRC
 
@@ -345,6 +345,7 @@ Switch /work or presenter/ mode in org-mode
         (setq steel-org-use-presenter nil)
       (setq steel-org-use-presenter t)
       )
+    (steel/set-org-faces)
     )
 #+END_SRC
 
@@ -353,13 +354,12 @@ Switch /work or presenter/ mode in org-mode
 Here are some custom set keybindings, that are global. Keybindings for different modes and features are set under that specific feature.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-
   ;; Press CTRL-ALT-r to restart emacs
   (global-set-key (kbd "C-M-r") 'restart-emacs)
   (global-set-key (kbd "C-s-w") 'whitespace-cleanup)
   (global-set-key (kbd "C-M-r") 'restart-emacs)
   (global-set-key (kbd "C-x M-o") 'steel/switch-presenter-work-org-mode)
-  (global-set-key (kbd "C-c o a") 'org-agenda)
+  (global-set-key (kbd "C-c o a") 'steel/org-agenda)
 
 #+END_SRC
 
@@ -623,62 +623,71 @@ Here are all the face settings defined. Also a hook that hopefully enables emacs
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 
-  (defun steel/set-org-work-faces()
-    (steel/set-org-big-screen-faces)
-    )
-  (defun steel/set-org-big-screen-faces ()
-      (message "SETTING THE FACES ON STEEL!")
-      (set-face-attribute 'variable-pitch nil :family "Roboto" :weight 'light :height 270)
-      ;; Set the sizes of the headings
-      (dolist (face '((org-level-1 . 1.45)
-                      (org-level-2 . 1.2)
-                      (org-level-3 . 1.0)
-                      (org-level-4 . 0.9)
-                      (org-level-5 . 0.9)
-                      (org-level-6 . 0.9)
-                      (org-level-7 . 0.9)
-                      (org-level-8 . 0.9)))
-        (set-face-attribute (car face) nil
-                            :font steel-org-font
-                            :weight 'light
-                            :height (cdr face))
-        )
-      (set-face-attribute 'org-block nil :family steel-code-font :height 0.7)
-      (set-face-attribute 'org-block-begin-line nil
-                          :family steel-code-font
-                          :height 0.6
-                          :foreground "goldenrod"
-                          :background "#0e191c"
-                          :box
-                          '(:line-width (20 . 20) :color "#0e191c" :style nil)
-                          )
-      (set-face-attribute 'org-block-end-line nil
-                          :family steel-code-font
-                          :height 0.7
-                          :foreground "dark violet"
-                          :background "#0e191c"
-                          :box
-                          '(:line-width (20 . 20) :color "#0e191c" :style nil)
-                          )
+  (defun steel/set-org-faces ()
+    (setq steel-org-base-size 140)
+    (setq steel-org-code-size 0.8)
+    (setq steel-org-code-head 0.8)
 
-      (set-face-attribute 'org-link nil :weight 'light )
-      (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch) :height 0.85 )
-      (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-      (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-      (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
-      (set-face-attribute 'org-document-title nil :font steel-org-font :height 1.9 )
-      (set-face-attribute 'font-lock-comment-delimiter-face nil :background nil)
-      (set-face-attribute 'font-lock-comment-face nil :background nil :foreground "#888888" )
+    (when steel-org-use-presenter
+        (progn
+          (setq steel-org-base-size 270)
+          (setq steel-org-code-size 0.7)
+          (setq steel-org-code-head 0.6)
+          )
       )
+    (eval steel-org-use-presenter)
+    (set-face-attribute 'variable-pitch nil :family "Roboto" :weight 'light :height steel-org-base-size)
+    ;; Set the sizes of the headings
+    (dolist (face '((org-level-1 . 1.45)
+                    (org-level-2 . 1.2)
+                    (org-level-3 . 1.0)
+                    (org-level-4 . 0.9)
+                    (org-level-5 . 0.9)
+                    (org-level-6 . 0.9)
+                    (org-level-7 . 0.9)
+                    (org-level-8 . 0.9)))
+      (set-face-attribute (car face) nil
+                          :font steel-org-font
+                          :weight 'light
+                          :height (cdr face))
+      )
+    (set-face-attribute 'org-block nil :family steel-code-font :height steel-org-code-size)
+    (set-face-attribute 'org-block-begin-line nil
+                        :family steel-code-font
+                        :height steel-org-code-head
+                        :foreground "goldenrod"
+                        :background "#0e191c"
+                        :box
+                        '(:line-width (20 . 20) :color "#0e191c" :style nil)
+                        )
+    (set-face-attribute 'org-block-end-line nil
+                        :family steel-code-font
+                        :height steel-org-code-head
+                        :foreground "dark violet"
+                        :background "#0e191c"
+                        :box
+                        '(:line-width (20 . 20) :color "#0e191c" :style nil)
+                        )
+
+    (set-face-attribute 'org-link nil :weight 'light )
+    (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch) :height 0.85 )
+    (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+    (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+    (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+    (set-face-attribute 'org-document-title nil :font steel-org-font :height 1.9 )
+    (set-face-attribute 'font-lock-comment-delimiter-face nil :background nil)
+    (set-face-attribute 'font-lock-comment-face nil :background nil :foreground "#888888" )
+    )
 
   (if (daemonp)
       (add-hook 'after-make-frame-functions
                 (lambda (frame)
                   (with-selected-frame frame
-                    (steel/set-org-work-faces))))
-    (steel/set-org-work-faces)
+                    (steel/set-org-faces))))
+    (steel/set-org-faces)
     )
-  (add-hook 'after-init-hook #'steel/set-org-work-faces)
+
+  (add-hook 'after-init-hook #'steel/set-org-faces)
 
 #+END_SRC
 * Dashboard
@@ -690,17 +699,36 @@ A custom start page if nothing else is wanted.
 
   (use-package dashboard
     :ensure t
-    :init (progn
-            (dashboard-setup-startup-hook)
-            (setq dashboard-banner-logo-title "Steel sky 0.2.7")
-            (setq dashboard-startup-banner "~/.emacs.d/img/logo-medium.png")
-            (setq dashboard-items '((recents  . 20)))
-            (setq dashboard-init-info "\"Steel sky\" a flavour of emacs with a hint of fresh blue skies, coffee and rusty steel.")
-            (setq dashboard-footer-messages '("Keep up the good work!"))
-            (if (< (length command-line-args) 2)
-                (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
-              )
-            )
+    :config
+    (dashboard-setup-startup-hook)
+    :custom
+    (dashboard-week-agenda t)
+    (dashboard-remove-tags t)
+    (dashboard-agenda-prefix-format  "%i %s ")
+    (dashboard-center-content t)
+    (dashboard-agenda-sort-strategy '(time-up))
+    (dashboard-match-agenda-entry
+     "TODO=\"TODO\"|TODO=\"EVENT\"|TODO=\"BIRTHDAY\"")
+    (dashboard-agenda-prefix-format " ")
+    (dashboard-icon-type 'all-the-icons)
+    (dashboard-banner-logo-title "Steel sky 0.2.7")
+    (dashboard-set-heading-icons t)
+    (dashboard-set-file-icons t)
+    (dashboard-startup-banner "~/.emacs.d/img/logo-medium.png")
+    (dashboard-items
+     '(
+       (agenda . 5)
+       (recents  . 5)
+       (projects . 5)
+       )
+     )
+    (dashboard-init-info "\"Steel sky\" a flavour of emacs with a hint of fresh blue skies, coffee and rusty steel. Edit ~/.emacs.d/steel.org")
+    (dashboard-footer-messages '("Keep up the good work!"))
+
+    )
+
+  (if (< (length command-line-args) 2)
+      (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
     )
 
 #+END_SRC
@@ -896,11 +924,27 @@ org-mode is nowadays bundled with Emacs. But I also added some extra packages.
 
 #+END_SRC
 
-** Todo setup
+** Agenda setup
 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (setq org-agenda-files (directory-files-recursively steel-org-dir "\\.org$"))
+
+  (setq org-agenda-prefix-format '((agenda . " %i %t")))
+  (setq org-agenda-skip-scheduled-if-done t)
+
+
+  (defun steel/refresh-agenda ()
+    (setq org-agenda-files (directory-files-recursively steel-org-dir "\\.org$"))
+    )
+
+  (steel/refresh-agenda)
+
+
+  (defun steel/org-agenda ()
+    (interactive)
+    (steel/refresh-agenda)
+    (org-agenda)
+    )
 #+END_SRC
 
 ** org-modern
