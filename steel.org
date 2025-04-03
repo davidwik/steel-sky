@@ -360,7 +360,7 @@ Here are some custom set keybindings, that are global. Keybindings for different
   (global-set-key (kbd "C-M-r") 'restart-emacs)
   (global-set-key (kbd "C-x M-o") 'steel/switch-presenter-work-org-mode)
   (global-set-key (kbd "C-c o a") 'steel/org-agenda)
-
+  (global-set-key (kbd "C-c o c") 'org-capture)
 #+END_SRC
 
 * Look and feel
@@ -717,7 +717,6 @@ A custom start page if nothing else is wanted.
     (dashboard-startup-banner "~/.emacs.d/img/logo-medium.png")
     (dashboard-items
      '(
-       (agenda . 8)
        (recents  . 5)
        (projects . 5)
        )
