@@ -310,6 +310,7 @@ Use chat-gpt straight in Emacs, or even a local AI model.
 
 #+END_SRC
 
+* Steel customization
 ** Steel hooks and functions!
 
 Here are some custom hooks, like formatting some files before saving etc.
@@ -360,9 +361,8 @@ Here are some custom set keybindings, that are global. Keybindings for different
   (global-set-key (kbd "C-M-r") 'restart-emacs)
   (global-set-key (kbd "C-x M-o") 'steel/switch-presenter-work-org-mode)
   (global-set-key (kbd "C-c o a") 'steel/org-agenda)
-
+  (global-set-key (kbd "C-c o c") 'org-capture)
 #+END_SRC
-
 * Look and feel
 
 This section coveres the look and feel of Steel Sky. Everything from themes, fonts and more graphical elements of the editor. Plus some tweaks and modifications.
@@ -702,7 +702,7 @@ A custom start page if nothing else is wanted.
     :config
     (dashboard-setup-startup-hook)
     :custom
-    (dashboard-week-agenda t)
+
     (dashboard-remove-tags t)
     (dashboard-agenda-prefix-format  "%i %s ")
     (dashboard-center-content t)
@@ -717,7 +717,6 @@ A custom start page if nothing else is wanted.
     (dashboard-startup-banner "~/.emacs.d/img/logo-medium.png")
     (dashboard-items
      '(
-       (agenda . 5)
        (recents  . 5)
        (projects . 5)
        )
@@ -903,6 +902,7 @@ org-mode is nowadays bundled with Emacs. But I also added some extra packages.
     (org-mode . org-indent-mode)
     (org-mode . variable-pitch-mode)
     :config
+    (setq org-directory steel-org-dir)
     (setq org-hide-leading-stars t)
     (setq org-hide-emphasis-markers t)
     (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
