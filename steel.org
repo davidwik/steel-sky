@@ -669,6 +669,7 @@ Here are all the face settings defined. Also a hook that hopefully enables emacs
                         '(:line-width (20 . 20) :color "#0e191c" :style nil)
                         )
 
+    (set-face-attribute 'italic nil :underline nil)
     (set-face-attribute 'org-link nil :weight 'light )
     (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch) :height 0.85 )
     (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
