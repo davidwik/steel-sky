@@ -933,17 +933,7 @@ org-mode is nowadays bundled with Emacs. But I also added some extra packages.
   (setq org-agenda-skip-scheduled-if-done t)
   (setq org-agenda-start-with-log-mode t)
 
-  (defun steel/refresh-agenda ()
-    (setq org-agenda-files (directory-files-recursively steel-org-dir "\\.org$"))
-    )
 
-  (steel/refresh-agenda)
-
-  (defun steel/org-agenda ()
-    (interactive)
-    (steel/refresh-agenda)
-    (org-agenda)
-    )
 #+END_SRC
 
 ** org-modern
