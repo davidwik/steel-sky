@@ -119,7 +119,7 @@ Here are the tweaks of the more general configuration of Emacs. Such as not crea
 
 ** Clock and calendar
 
-As a European I like my extra 12 hours. And we start work on mondays.
+As a European, I like my extra 12 hours. And we start work on Mondays.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 
@@ -261,9 +261,9 @@ https://github.com/joaotavora/yasnippet
     )
 #+END_SRC
 
-
 Ex. Create a new snippet with ~M-x~ =yas/new-snippet=
-#+BEGIN_SRC
+
+#+BEGIN_SRC shell
 # -*- mode: snippet -*-
 # name: Python generate class
 # key: <<pc
@@ -299,9 +299,10 @@ There are days you would like to move a section or a line up in code or text. Sa
 #+END_SRC
 
 ** CHAT GPT shell
+
 https://github.com/xenodium/chatgpt-shell
 
-Use chat-gpt straight in Emacs, or even a local AI model.
+Use chat-gpt straight in Emacs, or other LM's. Also local ones.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package chatgpt-shell
@@ -310,11 +311,14 @@ Use chat-gpt straight in Emacs, or even a local AI model.
 
 #+END_SRC
 
+* Steel customizations
 ** Steel hooks and functions!
 
-Here are some custom hooks, like formatting some files before saving etc.
+This is a collection of custom functions made to make the life easier as we venture on the journey to fulfillment.
 
-*Clean up* - white-space before saving an org file
+*steel/org-mode-before-save-hook*
+Remove trailing whitespace before save.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 
   (defun steel/org-mode-before-save-hook ()
@@ -325,28 +329,64 @@ Here are some custom hooks, like formatting some files before saving etc.
 
 #+END_SRC
 
-*Make markdown* - After saving a README.org
+
+*steel/org-buffer-to-gfm-markdown*
+Save a markdown copy of current org-buffer (requires pandoc)
+Since the built in org to markdown converter is very basic, use pandoc to convert the file.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (defun steel/org-buffer-to-gfm-markdown ()
+    "Export the current Org buffer to GitHub-Flavored Markdown using pandoc."
+    (interactive)
+    (let* ((org-file (buffer-file-name))
+           (base-name (file-name-sans-extension org-file))
+           (md-file (concat base-name ".md")))
+      (if (and org-file (string= (file-name-extension org-file) "org"))
+          (progn
+            (save-buffer)
+            (let ((exit-code
+                   (call-process "pandoc" nil "*Pandoc Output*" t
+                                 "-f" "org"
+                                 "-t" "gfm"
+                                 "-o" md-file
+                                 org-file)))
+              (if (eq exit-code 0)
+                  (message "Exported to %s successfully." md-file)
+                (message "Pandoc failed with exit code %d. See *Pandoc Output* buffer." exit-code))))
+        (message "This buffer is not visiting an Org file."))))
+
+#+END_SRC
+
+
+*steel/rg-export-to-md-on-save*
+Automatically generate a README.md after saving an README.org
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 
   (defun steel/org-export-to-md-on-save ()
     "Automatically export README.org to README.md on save."
     (when (and (string= (buffer-file-name) (expand-file-name "README.org"))
                (eq major-mode 'org-mode))
-      (org-md-export-to-markdown)))
+      (steel/org-buffer-to-gfm-markdown)))
   (add-hook 'after-save-hook #'steel/org-export-to-md-on-save)
 
 #+END_SRC
 
-Switch /work or presenter/ mode in org-mode
+
+*steel/switch-presenter-work-org-mode*
+Switch work or big screen mode in org-mode
 #+BEGIN_SRC emacs-lisp :tangle yes
+
   (defun steel/switch-presenter-work-org-mode ()
-    (interactive)
-    (if steel-org-use-presenter
-        (setq steel-org-use-presenter nil)
-      (setq steel-org-use-presenter t)
+      (interactive)
+      (if steel-org-use-presenter
+          (setq steel-org-use-presenter nil)
+        (setq steel-org-use-presenter t)
+        )
+      (steel/set-org-faces)
       )
-    (steel/set-org-faces)
-    )
+
 #+END_SRC
 
 ** Steel hot keys
@@ -756,7 +796,9 @@ Rejoice! Gone are the days of /`C-x o`/.  When having many areas open this neat 
 
 ** Winner
 
-It's easy to mess things up especially if you have a nice window layout. That's why winner was invented and people rejoiced. Finally we are all winners.
+It's easy to mess things up especially if you have a nice window layout. That's why winner was invented and people rejoiced. Finally we are all winners!
+
+The default keybindings are ~C-c left~ and ~C-c right~.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 
@@ -768,6 +810,7 @@ It's easy to mess things up especially if you have a nice window layout. That's 
 #+END_SRC
 
 ** Golden-Ratio
+
 https://github.com/roman/golden-ratio.el
 
 Golden ratio slightly enlarges an active window. Useful when working with smaller screen sizes.
@@ -848,8 +891,11 @@ Support for language servers, such as pyright and ruff (only linting)
 #+END_SRC
 
 ** FlyCheck
+
 https://www.flycheck.org/en/latest/
+
 A detailed linter frontend.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package flycheck
     :ensure t
@@ -869,12 +915,14 @@ A detailed linter frontend.
 
 https://orgmode.org/
 
-This section covers everything about org-mode, the purpose of Emacs and the purpose of life.
+This section is all  about org-mode, the purpose of Emacs and the purpose of life.
 
 ** Olivetti
 
+https://github.com/rnkn/olivetti
+
 Puts org mode in center for *better writing experience*.
-Like a typewriter, such as...
+Like a typewriter called...
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 
@@ -911,6 +959,27 @@ org-mode is nowadays bundled with Emacs. But I also added some extra packages.
 
 #+END_SRC
 ** Babel
+
+Install some additional babel packages.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; Make http calls
+  (use-package ob-http
+    :ensure t
+    )
+
+  ;; RUST
+  (use-package ob-rust
+    :ensure t
+
+    )
+  ;; TypeScript
+  (use-package ob-typescript
+    :ensure t)
+
+#+END_SRC
+
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -919,10 +988,16 @@ org-mode is nowadays bundled with Emacs. But I also added some extra packages.
      (shell . t)       ;; Enable Shell scripting
      (js . t)          ;; Enable JavaScript
      (sql . t)         ;; Enable SQL
+     (rust . t)        ;; Enble rust
+     (http . t)        ;; Enable http
+     (typescript . t)  ;; Enable typescript
      (C . t)))         ;; Enable C/C++
     (setq org-babel-python-command "python3")
 
 #+END_SRC
+
+
+
 
 ** Agenda setup
 
@@ -1383,4 +1458,5 @@ It would be cool if the following could be fixed
 
   (set-face-attribute 'font-lock-comment-delimiter-face nil :background nil)
   (set-face-attribute 'font-lock-comment-face nil :background nil :foreground "#444444" )
+
 #+END_SRC
