@@ -657,7 +657,7 @@ In order to create a focused environment with out any other distractions than te
   (scroll-bar-mode -1)
 #+END_SRC
 
-* Setting up faces
+** Setting up faces
 
 Here are all the face settings defined. Also a hook that hopefully enables emacs-daemon to render the fonts correctly.
 
@@ -708,7 +708,10 @@ Here are all the face settings defined. Also a hook that hopefully enables emacs
                         :box
                         '(:line-width (20 . 20) :color "#0e191c" :style nil)
                         )
-
+    (set-face-attribute 'org-table nil
+                        :family steel-code-font
+                        :foreground "sky blue"
+                    )
     (set-face-attribute 'italic nil :underline nil)
     (set-face-attribute 'org-link nil :weight 'light )
     (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch) :height 0.85 )
@@ -731,6 +734,7 @@ Here are all the face settings defined. Also a hook that hopefully enables emacs
   (add-hook 'after-init-hook #'steel/set-org-faces)
 
 #+END_SRC
+
 * Dashboard
 
 https://github.com/emacs-dashboard/emacs-dashboard
@@ -758,8 +762,8 @@ A custom start page if nothing else is wanted.
     (dashboard-startup-banner "~/.emacs.d/img/logo-medium.png")
     (dashboard-items
      '(
-       (recents  . 5)
-       (projects . 5)
+       (agenda . 5)
+       (recents  . 7)
        )
      )
     (dashboard-init-info "\"Steel sky\" a flavour of emacs with a hint of fresh blue skies, coffee and rusty steel. Edit ~/.emacs.d/steel.org")
@@ -839,7 +843,7 @@ The interface for *autocomplete* and a lot more.
     :config
     (global-company-mode t)
     (setq
-     company-idle-delay 0.5
+     company-idle-delay 0.9
      company-minimum-prefix-length 0
      company-tooltip-offset-display 'lines
      company-tooltip-flip-when-above t
@@ -916,6 +920,7 @@ A detailed linter frontend.
 https://orgmode.org/
 
 This section is all  about org-mode, the purpose of Emacs and the purpose of life.
+What I would like is to read about earth
 
 ** Olivetti
 
@@ -995,7 +1000,6 @@ Install some additional babel packages.
     (setq org-babel-python-command "python3")
 
 #+END_SRC
-
 
 
 
