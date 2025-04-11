@@ -32,6 +32,7 @@ get-deps:
 	pipx install ruff
 clean:
 	rm -rf steel.el        \
+	       personal.el     \
                .cache/         \
                eln-cache/      \
                url             \
@@ -49,6 +50,7 @@ clean:
                .lsp-session-v1 \
                auto-save-list/ \
                history         \
+	       tree-sitter/    \
                init.el
 config:
 	emacs steel.org
