@@ -1355,10 +1355,24 @@ Rudimentary Rust support
     )
 #+END_SRC
 
+** COMMENT Elixir
+Rudimentary Elixir support
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (use-package heex-ts-mode
+    :ensure t)
+
+    (use-package elixir-ts-mode
+      :ensure t
+      :after heex-ts-mode
+      )
+
+#+END_SRC
+
 ** Web Mode
 https://web-mode.org/
 
-What a beast of a mode! Supports HTML, CSS, Javascript!
+What a beast of a mode! Supports HTML, CSS, JavaScript!
 Has not been configured yet...
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1386,7 +1400,6 @@ https://jblevins.org/projects/markdown-mode/
 
 A lesser format than .org, but it's used everywhere
 
-
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package markdown-mode
     :ensure t
@@ -1396,9 +1409,10 @@ A lesser format than .org, but it's used everywhere
     :ensure t
     )
 #+END_SRC
+
 * Unused
 
-Packages that are not active for different reasons. Could be buggy or just not needed at the moment. But placed here to be served as a reminder of their existence.
+Packages that are not active for different reasons. Could be buggy or just not needed at the moment. But placed here to be seared as a reminder of their existence.
 
 ** COMMENT Eglot
 I had a hard time getting Eglot to work nicely. Even though it should be more effecient.
