@@ -1344,12 +1344,34 @@ Here are all the particular settings for each language mode. Some of them are us
 This mode is depending on that you are using virtual environments with the venv in the directory `.venv`.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package python
-    :hook
-    (python-mode . lsp-mode)
-    (python-mode . ruff-format-on-save-mode)
-    (python-mode . display-fill-column-indicator-mode)
-   )
+  (if (treesit-language-available-p 'python)
+      (progn
+        (use-package python-ts
+          :hook
+          (python-ts-mode . lsp-mode)
+          (python-ts-mode . ruff-format-on-save-mode)
+          (python-ts-mode . display-fill-column-indicator-mode)
+          )
+        (add-hook 'python-ts-mode-hook
+                  (lambda ()
+                    (set-fill-column 80)
+                    )
+                  )
+        )
+    (progn
+      (use-package python
+        :hook
+        (python-mode . lsp-mode)
+        (python-mode . ruff-format-on-save-mode)
+        (python-mode . display-fill-column-indicator-mode)
+        )
+      (add-hook 'python-mode-hook
+                (lambda ()
+                  (set-fill-column 80)
+                  )
+                )
+      )
+    )
 
   (use-package pyvenv
     :ensure t
@@ -1365,12 +1387,8 @@ This mode is depending on that you are using virtual environments with the venv 
                   (setq python-shell-interpreter "python3"))))
     )
 
-  ;; Put the column indicator at line 80
-  (add-hook 'python-mode-hook
-            (lambda ()
-              (set-fill-column 80)
-              )
-            )
+
+
 #+END_SRC
 
 ** LUA
