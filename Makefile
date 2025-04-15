@@ -14,7 +14,25 @@ define INIT_BODY
 (message "- personal.org not found, not loading.")
 )
 endef
+
 export INIT_BODY
+
+define PERSONAL_BODY
+#+TITLE: Personal settings
+#+OPTIONS: toc:nil
+* Your own settings
+
+Here you can specify local changes, such as paths, tweaks and more.
+Changes here won't be overwritten when you do a fresh pull.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+;; elisp.code
+
+#+END_SRC
+endef
+export PERSONAL_BODY
+
 
 
 build:
@@ -23,9 +41,11 @@ build:
 	rm -f personal.el
 	rm -f .last-package-update-day
 	@echo "$$INIT_BODY" > init.el
+	@if [ ! -f personal.org ]; then \
+		echo "$$PERSONAL_BODY" > personal.org; \
+	fi
 	mkdir -p .install-flags/
 	emacs --script init.el
-
 
 get-deps:
 	pipx install basedpyright
@@ -50,7 +70,7 @@ clean:
                .lsp-session-v1 \
                auto-save-list/ \
                history         \
-	       tree-sitter/    \
+               tree-sitter/    \
                init.el
 config:
 	emacs steel.org

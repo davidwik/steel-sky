@@ -1,5 +1,5 @@
-#+OPTIONS: toc:nil
 #+TITLE: Steel Sky Config
+#+OPTIONS: toc:nil
 * Introduction
 
 This org file generates my favorite emacs config.
@@ -119,7 +119,7 @@ Here are the tweaks of the more general configuration of Emacs. Such as not crea
 
 ** Clock and calendar
 
-As a European, I like my extra 12 hours. And we start work on Mondays.
+As a Swedish European, I like my extra 12 hours, my coffee black and hot on a monday morning when I start my work week.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 
@@ -225,6 +225,20 @@ The big fat indentation list. I usually like to use 2 spaces for indentation, bu
               )
             )
 #+END_SRC
+** Which-key
+
+https://github.com/justbur/emacs-which-key
+
+/Which key/ makes it easier to find different key-combinations, by displaying them in the minibuffer.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package which-key
+    :config
+    (which-key-mode t)
+    )
+
+#+END_SRC
+
 * Editor features
 ** Multi-cursors
 
@@ -404,7 +418,6 @@ Here are some custom set keybindings, that are global. Keybindings for different
 #+END_SRC
 
 * Look and feel
-
 This section coveres the look and feel of Steel Sky. Everything from themes, fonts and more graphical elements of the editor. Plus some tweaks and modifications.
 
 ** Install fonts and font-icon pack
@@ -437,6 +450,7 @@ Checks whether my favorite fonts are installed, otherwise it will copy it to the
          '(
           "roboto.ttf"
           "envy.ttf"
+          "caveat.ttf"
           )))
     (let ((new-files nil))
       (dolist (ft fonts-to-install)
@@ -657,6 +671,23 @@ In order to create a focused environment with out any other distractions than te
   (scroll-bar-mode -1)
 #+END_SRC
 
+** Olivetti
+
+https://github.com/rnkn/olivetti
+
+Puts org mode in center for *better writing/reading experience*.
+Like a typewriter called...
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (use-package olivetti
+    :ensure t
+    :init
+    (setq olivetti-body-width 0.4)
+    )
+
+#+END_SRC
+
 ** Setting up faces
 
 Here are all the face settings defined. Also a hook that hopefully enables emacs-daemon to render the fonts correctly.
@@ -718,8 +749,10 @@ Here are all the face settings defined. Also a hook that hopefully enables emacs
     (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
     (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
     (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
-    (set-face-attribute 'org-document-title nil :font steel-org-font :height 1.9 )
+    (set-face-attribute 'org-document-title nil :family "Caveat" :underline nil :height 600 :weight 'light)
     (set-face-attribute 'font-lock-comment-delimiter-face nil :background nil)
+    (set-face-attribute 'org-document-info-keyword nil :height 0.6)
+    (set-face-attribute 'org-meta-line nil :height 0.6)
     (set-face-attribute 'font-lock-comment-face nil :background nil :foreground "#888888" )
     )
 
@@ -970,29 +1003,9 @@ https://orgmode.org/
 This section is all  about org-mode, the purpose of Emacs and the purpose of life.
 What I would like is to read about earth
 
-** Olivetti
-
-https://github.com/rnkn/olivetti
-
-Puts org mode in center for *better writing experience*.
-Like a typewriter called...
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-
-  (use-package olivetti
-    :ensure t
-    :init
-    (setq olivetti-body-width 0.4)
-    )
-
-#+END_SRC
-
 ** Org mode
 
-https://orgmode.org/
-
-The main reason for Emacs? The purpose of life?
-org-mode is nowadays bundled with Emacs. But I also added some extra packages.
+Here are some adjustments and tweaks for org-mode
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package org
@@ -1048,7 +1061,6 @@ Install some additional babel packages.
     (setq org-babel-python-command "python3")
 
 #+END_SRC
-
 
 ** Agenda setup
 
