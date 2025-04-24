@@ -757,6 +757,7 @@ Here are all the face settings defined. Also a hook that hopefully enables emacs
     (set-face-attribute 'font-lock-comment-delimiter-face nil :background nil)
     (set-face-attribute 'org-document-info-keyword nil :height 0.6)
     (set-face-attribute 'org-meta-line nil :height 0.6)
+    (set-face-attribute 'org-drawer nil :height 0.6)
     (set-face-attribute 'font-lock-comment-face nil :background nil :foreground "#888888" )
     )
 
