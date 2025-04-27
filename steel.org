@@ -1026,6 +1026,15 @@ Here are some adjustments and tweaks for org-mode
     (setq org-hide-leading-stars t)
     (setq org-hide-emphasis-markers t)
     (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
+
+    ;; Remap org src blocks to tree-sitter modes
+    (setq org-src-lang-modes
+          (append
+           '(("js" . js-ts)     ;; js → js-ts-mode
+             ("javascript" . js-ts)
+             ("jsx" . js-ts))  ;; jsx → tsx-ts-mode
+           org-src-lang-modes))
+
     )
 
 
@@ -1529,6 +1538,10 @@ Overrides in order to use treesitter (which is faster) instead of the traditiona
   (add-to-list
    'auto-mode-alist
    '("\\.yaml\\'" . yaml-ts-mode))
+
+  (add-to-list
+   'auto-mode-alist
+   '("\\.js?x\\'" . js-ts-mode))
 
 #+END_SRC
 
