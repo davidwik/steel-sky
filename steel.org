@@ -350,25 +350,25 @@ Since the built in org to markdown converter is very basic, use pandoc to conver
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 
-  (defun steel/org-buffer-to-gfm-markdown ()
-    "Export the current Org buffer to GitHub-Flavored Markdown using pandoc."
-    (interactive)
-    (let* ((org-file (buffer-file-name))
-           (base-name (file-name-sans-extension org-file))
-           (md-file (concat base-name ".md")))
-      (if (and org-file (string= (file-name-extension org-file) "org"))
-          (progn
-            (save-buffer)
-            (let ((exit-code
-                   (call-process "pandoc" nil "*Pandoc Output*" t
-                                 "-f" "org"
-                                 "-t" "gfm"
-                                 "-o" md-file
-                                 org-file)))
-              (if (eq exit-code 0)
-                  (message "Exported to %s successfully." md-file)
-                (message "Pandoc failed with exit code %d. See *Pandoc Output* buffer." exit-code))))
-        (message "This buffer is not visiting an Org file."))))
+    (defun steel/org-buffer-to-gfm-markdown ()
+      "Export the current Org buffer to GitHub-Flavored Markdown using pandoc."
+      (interactive)
+      (let* ((org-file (buffer-file-name))
+             (base-name (file-name-sans-extension org-file))
+             (md-file (concat base-name ".md")))
+        (if (and org-file (string= (file-name-extension org-file) "org"))
+            (progn
+              (save-buffer)
+              (let ((exit-code
+                     (call-process "pandoc" nil "*Pandoc Output*" t
+                                   "-f" "org"
+                                   "-t" "gfm"
+                                   "-o" md-file
+                                   org-file)))
+                (if (eq exit-code 0)
+                    (message "Exported to %s successfully." md-file)
+                  (message "Pandoc failed with exit code %d. See *Pandoc Output* buffer." exit-code))))
+          (message "This buffer is not visiting an Org file."))))
 
 #+END_SRC
 
@@ -897,8 +897,9 @@ Settings for all the different autocomplete and linting features.
             (sql . ("https://github.com/m-novikov/tree-sitter-sql"))
             (toml . ("https://github.com/tree-sitter/tree-sitter-toml"))
             (yaml . ("https://github.com/ikatyang/tree-sitter-yaml.git"))
-            )
-          )
+            (dockerfile .
+          ("https://github.com/camdencheek/tree-sitter-dockerfile"))
+          ))
     :config
     (defun nf/treesit-install-all-languages ()
       "Install all languages specified by `treesit-language-source-alist'."
@@ -908,7 +909,7 @@ Settings for all the different autocomplete and linting features.
           (treesit-install-language-grammar lang)
           (message "`%s' parser was installed." lang)
           (sit-for 0.75)))
-      )
+     )
 
     (when (not (file-exists-p "~/.emacs.d/.install-flags/tree-sitter-languages.flag"))
       (message "Running post-install setup for some-package...")
@@ -1047,7 +1048,14 @@ Install some additional babel packages.
   ;; Make http calls
   (use-package ob-http
     :ensure t
-    )
+    :config
+      (org-babel-do-load-languages
+       'org-babel-load-languages
+       '((emacs-lisp . t)
+         (http . t)))
+      :after org
+      )
+
 
   ;; RUST
   (use-package ob-rust
@@ -1057,6 +1065,8 @@ Install some additional babel packages.
   ;; TypeScript
   (use-package ob-typescript
     :ensure t)
+
+  (setq org-confirm-babel-evaluate nil)
 
 #+END_SRC
 
@@ -1160,6 +1170,13 @@ Provides a graphical view (in browser, of all the different nodes)
   (use-package org-roam-ui
     :ensure t
     )
+#+END_SRC
+
+** ob-http
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+
 #+END_SRC
 
 * File system navigation
@@ -1537,7 +1554,11 @@ Overrides in order to use treesitter (which is faster) instead of the traditiona
   ;; And YaML
   (add-to-list
    'auto-mode-alist
-   '("\\.yaml\\'" . yaml-ts-mode))
+   '("\\.ya?ml\\'" . yaml-ts-mode))
+
+  (add-to-list
+   'auto-mode-alist
+   '("\\Dockerfile" . dockerfile-ts-mode))
 
   (add-to-list
    'auto-mode-alist
