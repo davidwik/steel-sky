@@ -48,6 +48,8 @@ build:
 	emacs --script init.el
 
 get-deps:
+	@echo "Installing, tools needed for building"
+	sudo apt install -y libtool libtool-bin cmake
 	pipx install basedpyright
 	pipx install ruff
 clean:
