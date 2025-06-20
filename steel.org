@@ -116,6 +116,21 @@ Automatically keeps all the Emacs packages fresh!
 * General editor configuration
 
 Here are the tweaks of the more general configuration of Emacs. Such as not creating a lot of backup files, save minibuffer history etc.
+** Ediff horizontally
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (setq ediff-split-window-function 'split-window-horizontally)
+
+#+END_SRC
+
+** No bell!
+Just recently emacs started to beep for no reason.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (setq ring-bell-function 'ignore)
+
+#+END_SRC
 
 ** Clock and calendar
 
@@ -189,17 +204,15 @@ The big fat indentation list. I usually like to use 2 spaces for indentation, bu
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; Defining indentation
+  (setq-default indent-tabs-mode nil)
   (setq require-final-newline 't)
   (setq tab-width 2)
   (setq standard-indent 2)
   (setq c-basic-indent 2)
-  (setq indent-tabs-mode nil)
-  (setq-default indent-tabs-mode nil)
-  (setq-default c-basic-offset 2)
-  (setq-default tab-width 2)
+  ;;(setq-default tab-width 2)
   (setq-default sgml-indent-step 2)
   (setq-default sgml-basic-offset 2)
-  (setq c-default-style "linux"
+  (setq c-default-style "gnu"
         c-basic-offset 2)
   (setq js-indent-level 2)
   (setq css-indent-offset 2)
@@ -1398,7 +1411,6 @@ A better terminal for Emacs.
 * Languages and formats
 
 Here are all the particular settings for each language mode. Some of them are using a language server such as basedpyright and linters such as ruff.
-
 ** Python mode
 
 This mode is depending on that you are using virtual environments with the venv in the directory `.venv`.
