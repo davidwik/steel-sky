@@ -56,7 +56,7 @@ Here is your oppurtunity to style some quick settings.
     )
 
   ;; Opacity value 100 is fully opaque.
-  (defvar steel-opacity 95
+  (defvar steel-opacity 98
     "The value of background opacity"
     )
 
