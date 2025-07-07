@@ -74,6 +74,19 @@ Most of the setup is using package.el for installation of elisp packages. But fi
 #+BEGIN_SRC emacs-lisp :tangle yes
   (require 'package)
 
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+        (bootstrap-version 6))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+          (url-retrieve-synchronously
+           "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+           'silent 'inhibit-cookies)
+        (goto-char (point-max))
+        (eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
+
 
   ;; Adds the repositories
   (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
@@ -88,13 +101,13 @@ Most of the setup is using package.el for installation of elisp packages. But fi
              when (not (package-installed-p pkg)) do (cl-return nil)
              finally (cl-return t)))
 
-  (unless (custom/packages-installed-p)
-    (when (not package-archive-contents)
-      (message "%s" "Refreshing package database...")
-      (package-refresh-contents)
-      (dolist (pkg custom/packages)
-        (when (not (package-installed-p pkg))
-          (package-install pkg)))))
+    (unless (custom/packages-installed-p)
+      (when (not package-archive-contents)
+        (message "%s" "Refreshing package database...")
+        (package-refresh-contents)
+        (dolist (pkg custom/packages)
+          (when (not (package-installed-p pkg))
+            (package-install pkg)))))
   (provide 'custom/packages)
 
   #+END_SRC
@@ -1008,6 +1021,7 @@ A detailed linter frontend.
     :init (global-flycheck-mode)
     :config
     (setq
+     flycheck-checker-error-threshold 900
      flycheck-display-errors-delay 10
      flycheck-auto-display-errors-after-checking nil
      )
@@ -1196,7 +1210,6 @@ Provides a graphical view (in browser, of all the different nodes)
 * File system navigation
 
 This section covers file managers and file system navigation. Both Treemacs and Helm.
-
 ** Treemacs
 
 https://github.com/Alexander-Miller/treemacs
@@ -1332,13 +1345,6 @@ https://emacs-helm.github.io/helm/
 The nifty file browser and interface enhancer
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package helm-icons
-    :ensure t
-    :config
-    (setq helm-icons-provider 'all-the-icons)
-    )
-
-  (helm-icons-enable)
   (use-package helm
     :ensure t
     :config
@@ -1384,6 +1390,7 @@ The nifty file browser and interface enhancer
         )
 
   (use-package helm-posframe
+    :straight (helm-posframe :type git :host github :repo "tumashu/helm-posframe")
     :ensure t
     :config
     (setq
@@ -1391,6 +1398,16 @@ The nifty file browser and interface enhancer
      )
     )
   (helm-posframe-enable)
+
+  (use-package helm-icons
+    :straight (helm-icons :type git :host github :repo "yyoncho/helm-icons")
+    :ensure t
+    :config
+    (setq helm-icons-provider 'all-the-icons)
+    )
+  (helm-icons-enable)
+
+
 #+END_SRC
 
 ** VTerm
