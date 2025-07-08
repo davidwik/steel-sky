@@ -370,6 +370,18 @@ Remove trailing whitespace before save.
 #+END_SRC
 
 
+*steel/rust-format-on-save-hook*
+Format cleanup when save.
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (defun steel/rust-format-on-save-hook ()
+    "Format Rust buffer before saving."
+    (add-hook 'before-save-hook #'lsp-format-buffer nil t)
+    )
+
+#+END_SRC
+
+
 *steel/org-buffer-to-gfm-markdown*
 Save a markdown copy of current org-buffer (requires pandoc)
 Since the built in org to markdown converter is very basic, use pandoc to convert the file.
@@ -987,6 +999,7 @@ Support for language servers, such as pyright and ruff (only linting)
           lsp-headerline-breadcrum-enable t
           lsp-headerline-breadcrumb-enable-diagnostics nil
           lsp-headerline-breadcrumb-icons-enable t
+          lsp-rust-server 'rust-analyzer
           )
     )
 
@@ -1024,12 +1037,14 @@ A detailed linter frontend.
      flycheck-checker-error-threshold 900
      flycheck-display-errors-delay 10
      flycheck-auto-display-errors-after-checking nil
+     flycheck-disabled-checkers '(rust-ts rust-cargo)
      )
     ;; '(flycheck-check-syntax-automatically (quote
     ;;                                        (save idle-change mode-enabled)))
     ;; '(flycheck-idle-change-delay 8) ;; Set delay based on what suits you the best
     ;; )
     )
+
     #+END_SRC
 * Org-mode
 
@@ -1488,13 +1503,16 @@ https://github.com/rust-lang/rust-mode
 Rudimentary Rust support
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package rust-mode
+  (use-package rust-ts-mode
+    :mode "\\.rs\\'"
     :ensure t
     :config
+    (setq indent-tabs-mode nil)
     (setq rust-format-on-save t)
     :hook
-    ;;(rust-mode . lsp-mode)
-    (rust-mode . prettify-symbols-mode)
+    (rust-ts-mode . prettify-symbols-mode)
+    (rust-ts-mode . lsp)
+    (rust-ts-mode . steel/rust-format-on-save-hook)
     )
 #+END_SRC
 
